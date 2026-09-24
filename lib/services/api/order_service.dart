@@ -1,51 +1,39 @@
-import 'dart:convert';
-
-import 'package:fashion_app/core/api_config.dart';
+import 'package:fashion_app/core/network/dio_client.dart';
 import 'package:fashion_app/models/order.dart';
 import 'package:fashion_app/services/api/api_service.dart';
-import 'package:http/http.dart' as http;
 
 class OrderService {
-  static Future<List<Order>> getUserOrders(int userId) async {
+  static Future<List<Order>> getUserOrders() {
     return ApiService.handleRequest(
-      () => http.get(
-        Uri.parse('${ApiConfig.ordersEndpoint}?user_id=$userId'),
-        headers: ApiService.getHeaders(),
-      ),
+      () => DioClient.instance.dio.get('/orders'),
       (data) {
-        List<Order> orders = [];
-        for (var item in data['data']) {
-          orders.add(Order.fromJson(item));
-        }
-        return orders;
+        return [
+          for (final item in (data as List))
+            Order.fromJson(item as Map<String, dynamic>),
+        ];
       },
     );
   }
 
   static Future<Map<String, dynamic>> createOrder({
-    required int userId,
-    required double totalAmount,
     required String customerName,
     required String phone,
     required String address,
     required String paymentMethod,
     required List<Map<String, dynamic>> items,
-  }) async {
+  }) {
     return ApiService.handleRequest(
-      () => http.post(
-        Uri.parse(ApiConfig.ordersEndpoint),
-        headers: ApiService.getHeaders(),
-        body: json.encode({
-          'user_id': userId,
-          'total_amount': totalAmount,
+      () => DioClient.instance.dio.post(
+        '/orders',
+        data: {
           'customer_name': customerName,
           'phone': phone,
           'address': address,
           'payment_method': paymentMethod,
           'items': items,
-        }),
+        },
       ),
-      (data) => data,
+      (data) => data as Map<String, dynamic>,
     );
   }
 }

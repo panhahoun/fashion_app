@@ -1,63 +1,58 @@
 import 'dart:async';
-import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:fashion_app/core/api_config.dart';
-import 'package:fashion_app/core/user_session.dart';
-import 'package:http/http.dart' as http;
 
-//api service, api exception
+/// Shared Dio request wrapper + typed exception.
+///
+/// FastAPI returns raw JSON (not a {success, data} envelope), so parsers read
+/// values straight off the response body.
 class ApiService {
-  static const Duration timeout = Duration(seconds: 30);
-
-  static Map<String, String> getHeaders() {
-    return {
-      'Content-Type': 'application/json; charset=UTF-8',
-      if (UserSession.authToken != null)
-        'Authorization': 'Bearer ${UserSession.authToken}',
-    };
-  }
-
   static Future<T> handleRequest<T>(
-    Future<http.Response> Function() request,
-    T Function(Map<String, dynamic>) parser,
+    Future<Response<dynamic>> Function() request,
+    T Function(dynamic data) parser,
   ) async {
     try {
       final response = await request().timeout(ApiConfig.timeout);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['success'] == true) {
-          return parser(data);
-        } else {
-          throw ApiException(data['message'] ?? 'Unknown error');
-        }
-      } else if (response.statusCode == 401) {
-        throw ApiException('Unauthorized. Please login again.');
-      } else {
-        throw ApiException('Server error: ${response.statusCode}');
-      }
+      return parser(response.data);
     } on TimeoutException {
       throw ApiException('Connection timeout. Please check your internet.');
-    } on http.ClientException catch (e) {
-      // Include API URL to make connection issues easier to diagnose.
-      throw ApiException(
-        'Network error: ${e.message}\nAPI: ${ApiConfig.baseUrl}',
-      );
+    } on ApiException {
+      rethrow;
+    } on DioException catch (e) {
+      throw _mapDioError(e);
     } catch (e) {
-      if (e is ApiException) rethrow;
       throw ApiException('Error: $e');
     }
   }
 
-  // Auth APIs
+  static ApiException _mapDioError(DioException e) {
+    final status = e.response?.statusCode;
+    final data = e.response?.data;
 
-  // Products APIs
+    if (status == 401) {
+      return ApiException('Unauthorized. Please login again.');
+    }
 
-  // Cart APIs
+    // FastAPI errors look like {"detail": "..."} — surface that message.
+    if (data is Map && data['detail'] != null) {
+      final detail = data['detail'];
+      return ApiException(detail is String ? detail : detail.toString());
+    }
 
-  // Orders APIs
-
-  // Categories API
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return ApiException('Connection timeout. Please check your internet.');
+      case DioExceptionType.connectionError:
+        return ApiException(
+          'Network error: ${e.message}\nAPI: ${ApiConfig.baseUrl}',
+        );
+      default:
+        return ApiException('Server error: ${status ?? 'unknown'}');
+    }
+  }
 }
 
 class ApiException implements Exception {

@@ -1,0 +1,13 @@
+.env
+.venv
+__pycache__
+*.pyc
+*.pyo
+fashion_store.db
+test_api.py
+run.py
+deploy
+.git
+.gitignore
+Dockerfile
+.dockerignore

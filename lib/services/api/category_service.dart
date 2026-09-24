@@ -1,21 +1,16 @@
-import 'package:fashion_app/core/api_config.dart';
+import 'package:fashion_app/core/network/dio_client.dart';
 import 'package:fashion_app/models/category.dart';
 import 'package:fashion_app/services/api/api_service.dart';
-import 'package:http/http.dart' as http;
 
 class CategoryService {
-  static Future<List<Category>> getAllCategories() async {
+  static Future<List<Category>> getAllCategories() {
     return ApiService.handleRequest(
-      () => http.get(
-        Uri.parse(ApiConfig.categoriesEndpoint),
-        headers: ApiService.getHeaders(),
-      ),
+      () => DioClient.instance.dio.get('/categories'),
       (data) {
-        List<Category> categories = [];
-        for (var item in data['data']) {
-          categories.add(Category.fromJson(item));
-        }
-        return categories;
+        return [
+          for (final item in (data as List))
+            Category.fromJson(item as Map<String, dynamic>),
+        ];
       },
     );
   }

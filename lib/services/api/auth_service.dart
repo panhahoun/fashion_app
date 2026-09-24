@@ -1,25 +1,18 @@
-import 'dart:convert';
-
-import 'package:fashion_app/core/api_config.dart';
+import 'package:fashion_app/core/network/dio_client.dart';
 import 'package:fashion_app/services/api/api_service.dart';
-import 'package:http/http.dart' as http;
 
 class AuthService {
+  // FastAPI returns {"access_token", "token_type", "user": {...}}.
   static Future<Map<String, dynamic>> login(
     String email,
     String password,
-  ) async {
+  ) {
     return ApiService.handleRequest(
-      () => http.post(
-        Uri.parse(ApiConfig.authEndpoint),
-        headers: ApiService.getHeaders(),
-        body: json.encode({
-          'action': 'login',
-          'email': email,
-          'password': password,
-        }),
+      () => DioClient.instance.dio.post(
+        '/auth/login',
+        data: {'email': email, 'password': password},
       ),
-      (data) => data['data'],
+      (data) => data as Map<String, dynamic>,
     );
   }
 
@@ -28,20 +21,18 @@ class AuthService {
     required String email,
     required String password,
     required String phone,
-  }) async {
+  }) {
     return ApiService.handleRequest(
-      () => http.post(
-        Uri.parse(ApiConfig.authEndpoint),
-        headers: ApiService.getHeaders(),
-        body: json.encode({
-          'action': 'register',
+      () => DioClient.instance.dio.post(
+        '/auth/register',
+        data: {
           'name': name,
           'email': email,
           'password': password,
           'phone': phone,
-        }),
+        },
       ),
-      (data) => data['data'],
+      (data) => data as Map<String, dynamic>,
     );
   }
 }

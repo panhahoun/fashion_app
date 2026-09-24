@@ -2,39 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppTheme {
-  // Brand Colors
-  static const Color primaryOrange = Color(0xFFFF8C42);
-  static const Color darkOrange = Color(0xFFE67E22);
-  static const Color softPeach = Color(0xFFFFF8F3);
-  static const Color lightGray = Color(0xFFF5F5F5);
-  static const Color mediumGray = Color(0xFF9E9E9E);
-  static const Color darkGray = Color(0xFF424242);
-  static const Color errorRed = Color(0xFFE74C3C);
-  static const Color successGreen = Color(0xFF27AE60);
-  static const Color darkBlue = Color(0xFF2C3E50);
-  static const Color warningOrange = Color(0xFFF39C12);
+  // Fashion App Palette
+  static const Color primary = Color(0xFF111111); // Deep Black
+  static const Color background = Color(0xFFF8F8F8); // Off White
+  static const Color card = Color(0xFFFFFFFF); // Surface / Card
+  static const Color textPrimary = Color(0xFF222222); // Text
+  static const Color textSecondary = Color(0xFF777777); // Secondary Text
+  static const Color accent = Color(0xFFC8A27A); // Warm Beige
+  static const Color border = Color(0xFFE5E5E5); // Border / Light Gray
+  static const Color successGreen = Color(0xFF2E7D32); // Success
+  static const Color errorRed = Color(0xFFD32F2F); // Error
+  static const Color navUnselected = Color(0xFF999999); // Bottom nav idle
 
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      primaryColor: primaryOrange,
-      scaffoldBackgroundColor: softPeach,
+      primaryColor: primary,
+      scaffoldBackgroundColor: background,
       fontFamily: 'Khmer OS',
       colorScheme: const ColorScheme.light(
-        primary: primaryOrange,
-        secondary: darkOrange,
+        primary: primary,
+        secondary: accent,
         error: errorRed,
-        surface: Colors.white,
+        surface: card,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
-        onSurface: darkGray,
+        onSurface: textPrimary,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.white,
+        backgroundColor: card,
         elevation: 0,
-        iconTheme: IconThemeData(color: darkGray),
+        iconTheme: IconThemeData(color: primary),
         titleTextStyle: TextStyle(
-          color: darkGray,
+          color: primary,
           fontSize: 18,
           fontWeight: FontWeight.bold,
           fontFamily: 'Khmer OS',
@@ -43,7 +43,7 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryOrange,
+          backgroundColor: primary,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -56,8 +56,23 @@ class AppTheme {
           ),
         ),
       ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          backgroundColor: card,
+          foregroundColor: primary,
+          side: const BorderSide(color: primary, width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          textStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       cardTheme: CardThemeData(
-        color: Colors.white,
+        color: card,
         elevation: 3,
         shadowColor: Colors.black.withValues(alpha: 0.12),
         shape: RoundedRectangleBorder(
@@ -67,18 +82,18 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFFDFDFD),
+        fillColor: card,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
+          borderSide: const BorderSide(color: border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFE8E8E8)),
+          borderSide: const BorderSide(color: border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primaryOrange, width: 2),
+          borderSide: const BorderSide(color: primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -88,10 +103,10 @@ class AppTheme {
             const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: Colors.white,
-        selectedColor: primaryOrange,
+        backgroundColor: card,
+        selectedColor: primary,
         labelStyle: const TextStyle(
-          color: darkGray,
+          color: textPrimary,
           fontWeight: FontWeight.w600,
         ),
         secondaryLabelStyle: const TextStyle(
@@ -100,7 +115,7 @@ class AppTheme {
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          side: const BorderSide(color: Color(0xFFEAEAEA)),
+          side: const BorderSide(color: border),
         ),
       ),
       snackBarTheme: const SnackBarThemeData(

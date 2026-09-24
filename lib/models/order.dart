@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:fashion_app/core/app_theme.dart';
 import 'package:fashion_app/models/order_item.dart';
 import 'package:flutter/material.dart';
@@ -63,15 +61,15 @@ class Order {
   Color get statusColor {
     switch (status) {
       case 'pending':
-        return AppTheme.warningOrange;
+        return AppTheme.accent;
       case 'processing':
-        return Colors.blue;
+        return AppTheme.primary;
       case 'completed':
         return AppTheme.successGreen;
       case 'cancelled':
         return AppTheme.errorRed;
       default:
-        return Colors.grey;
+        return AppTheme.textSecondary;
     }
   }
 }

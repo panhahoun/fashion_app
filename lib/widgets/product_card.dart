@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/routes/app_routes.dart';
 import 'package:fashion_app/models/product.dart';
-import 'package:fashion_app/screens/product_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -26,11 +27,7 @@ class ProductCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ProductDetailScreen(product: product),
-            ),
-          );
+          Get.toNamed(AppRoutes.productDetail, arguments: product);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +42,7 @@ class ProductCard extends StatelessWidget {
                             imageUrl: product.imageUrl,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(
-                              color: AppTheme.lightGray,
+                              color: AppTheme.border,
                               child: const Center(
                                 child: SizedBox(
                                   width: 20,
@@ -55,20 +52,20 @@ class ProductCard extends StatelessWidget {
                               ),
                             ),
                             errorWidget: (context, url, error) => Container(
-                              color: AppTheme.lightGray,
+                              color: AppTheme.border,
                               child: const Icon(
                                 Icons.image_not_supported,
                                 size: 36,
-                                color: AppTheme.mediumGray,
+                                color: AppTheme.textSecondary,
                               ),
                             ),
                           )
                         : Container(
-                            color: AppTheme.lightGray,
+                            color: AppTheme.border,
                             child: const Icon(
                               Icons.shopping_bag,
                               size: 36,
-                              color: AppTheme.mediumGray,
+                              color: AppTheme.textSecondary,
                             ),
                           ),
                   ),
@@ -97,7 +94,7 @@ class ProductCard extends StatelessWidget {
                           size: 18,
                           color: product.isFavorite
                               ? AppTheme.errorRed
-                              : AppTheme.darkGray,
+                              : AppTheme.textPrimary,
                         ),
                       ),
                     ),
@@ -151,7 +148,7 @@ class ProductCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: AppTheme.mediumGray,
+                          color: AppTheme.textSecondary,
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                         ),
@@ -164,7 +161,7 @@ class ProductCard extends StatelessWidget {
                         Text(
                           '\$${product.price.toStringAsFixed(2)}',
                           style: const TextStyle(
-                            color: AppTheme.primaryOrange,
+                            color: AppTheme.primary,
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
                           ),
@@ -177,16 +174,16 @@ class ProductCard extends StatelessWidget {
                             height: 30,
                             decoration: BoxDecoration(
                               color: onAddToCart != null
-                                  ? AppTheme.primaryOrange.withValues(alpha: 0.15)
-                                  : AppTheme.lightGray,
+                                  ? AppTheme.primary.withValues(alpha: 0.15)
+                                  : AppTheme.border,
                               borderRadius: BorderRadius.circular(13),
                             ),
                             child: Icon(
                               Icons.add_shopping_cart_rounded,
                               size: 17,
                               color: onAddToCart != null
-                                  ? AppTheme.primaryOrange
-                                  : AppTheme.mediumGray,
+                                  ? AppTheme.primary
+                                  : AppTheme.textSecondary,
                             ),
                           ),
                         ),
@@ -229,7 +226,7 @@ class ProductCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: AppTheme.mediumGray,
+                color: AppTheme.textSecondary,
               ),
             ),
     );

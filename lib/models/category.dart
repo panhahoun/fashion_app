@@ -47,7 +47,7 @@ class Category {
     try {
       return Color(int.parse(color.replaceFirst('#', '0xFF')));
     } catch (e) {
-      return AppTheme.primaryOrange;
+      return AppTheme.primary;
     }
   }
 }

@@ -1,0 +1,26 @@
+# Fashion Store API — production compose file (run from backend/deploy/).
+#
+#   docker compose up -d --build
+#
+# Port choice: NextGen API already binds 127.0.0.1:8000 on this server,
+# so the fashion API is exposed on 127.0.0.1:8001 -> container :8000.
+# Binding to 127.0.0.1 ONLY (never 0.0.0.0) is what actually protects it,
+# because Docker published ports bypass ufw.
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: fashion-api:latest
+    container_name: fashion-api
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8001:8000"
+    env_file:
+      - .env
+    volumes:
+      # SQLite data lives in deploy/data/ on the host so it survives
+      # container rebuilds. Never mount the .db file directly — Docker
+      # would create a directory in its place.
+      - ./data:/app/data

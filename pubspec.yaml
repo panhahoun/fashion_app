@@ -8,10 +8,11 @@ environment:
 
 dependencies:
   cached_network_image: ^3.4.1
+  dio: ^5.7.0
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.2.1
-  http: ^1.6.0
+  get: ^4.7.2
   intl: ^0.20.2
   pdf: ^3.11.3
   printing: ^5.14.2

@@ -1,64 +1,46 @@
-import 'package:fashion_app/core/api_config.dart';
+import 'package:fashion_app/core/network/dio_client.dart';
 import 'package:fashion_app/models/product.dart';
 import 'package:fashion_app/services/api/api_service.dart';
-import 'package:http/http.dart' as http;
 
 class ProductService {
-  static Future<List<Product>> getAllProducts() async {
+  static List<Product> _parseList(dynamic data) {
+    return [
+      for (final item in (data as List))
+        Product.fromJson(item as Map<String, dynamic>),
+    ];
+  }
+
+  static Future<List<Product>> getAllProducts() {
     return ApiService.handleRequest(
-      () => http.get(
-        Uri.parse(ApiConfig.productsEndpoint),
-        headers: ApiService.getHeaders(),
-      ),
-      (data) {
-        List<Product> products = [];
-        for (var item in data['data']) {
-          products.add(Product.fromJson(item));
-        }
-        return products;
-      },
+      () => DioClient.instance.dio.get('/products'),
+      _parseList,
     );
   }
 
-  static Future<Product> getProductById(int id) async {
+  static Future<Product> getProductById(int id) {
     return ApiService.handleRequest(
-      () => http.get(
-        Uri.parse('${ApiConfig.productsEndpoint}?id=$id'),
-        headers: ApiService.getHeaders(),
-      ),
-      (data) => Product.fromJson(data['data']),
+      () => DioClient.instance.dio.get('/products/$id'),
+      (data) => Product.fromJson(data as Map<String, dynamic>),
     );
   }
 
-  static Future<List<Product>> searchProducts(String query) async {
+  static Future<List<Product>> searchProducts(String query) {
     return ApiService.handleRequest(
-      () => http.get(
-        Uri.parse('${ApiConfig.productsEndpoint}?search=$query'),
-        headers: ApiService.getHeaders(),
+      () => DioClient.instance.dio.get(
+        '/products',
+        queryParameters: {'search': query},
       ),
-      (data) {
-        List<Product> products = [];
-        for (var item in data['data']) {
-          products.add(Product.fromJson(item));
-        }
-        return products;
-      },
+      _parseList,
     );
   }
 
-  static Future<List<Product>> getProductsByCategory(String category) async {
+  static Future<List<Product>> getProductsByCategory(String category) {
     return ApiService.handleRequest(
-      () => http.get(
-        Uri.parse('${ApiConfig.productsEndpoint}?category=$category'),
-        headers: ApiService.getHeaders(),
+      () => DioClient.instance.dio.get(
+        '/products',
+        queryParameters: {'category': category},
       ),
-      (data) {
-        List<Product> products = [];
-        for (var item in data['data']) {
-          products.add(Product.fromJson(item));
-        }
-        return products;
-      },
+      _parseList,
     );
   }
 }
