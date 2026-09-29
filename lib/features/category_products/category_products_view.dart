@@ -1,4 +1,5 @@
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/features/category_products/category_products_controller.dart';
 import 'package:fashion_app/widgets/product_card.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,12 @@ class CategoryProductsView extends GetView<CategoryProductsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
-      appBar: AppBar(title: Text(controller.category.nameKhmer)),
+      appBar: AppBar(
+        title: LocalizedText(
+          khmer: controller.category.nameKhmer,
+          english: controller.category.nameEnglish,
+        ),
+      ),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -31,14 +37,22 @@ class CategoryProductsView extends GetView<CategoryProductsController> {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: controller.loadProducts,
-                  child: const Text('ព្យាយាមម្តងទៀត'),
+                  child: Text('retry'.tr),
                 ),
               ],
             ),
           );
         }
         if (controller.products.isEmpty) {
-          return const Center(child: Text('មិនមានផលិតផល'));
+          return Center(
+            child: Text(
+              'no_products'.tr,
+              style: const TextStyle(
+                color: AppTheme.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          );
         }
         return GridView.builder(
           padding: const EdgeInsets.all(16),

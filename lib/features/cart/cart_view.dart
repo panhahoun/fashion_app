@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/features/cart/cart_controller.dart';
 import 'package:fashion_app/models/cart_item.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,9 @@ class CartView extends GetView<CartController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFFF7F5F1),
       appBar: AppBar(
-        title: const Text('កន្ត្រក'),
+        title: Text('cart'.tr),
         centerTitle: true,
       ),
       body: Obx(() {
@@ -30,7 +31,7 @@ class CartView extends GetView<CartController> {
           children: [
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
                 itemCount: controller.cartItems.length,
                 itemBuilder: (context, index) {
                   return _buildCartItem(controller.cartItems[index]);
@@ -63,7 +64,7 @@ class CartView extends GetView<CartController> {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: controller.loadCart,
-                  child: const Text('ព្យាយាមម្តងទៀត'),
+                  child: Text('retry'.tr),
                 ),
               ],
             ),
@@ -88,13 +89,13 @@ class CartView extends GetView<CartController> {
                   color: AppTheme.textSecondary.withValues(alpha: 0.5),
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'កន្ត្រករបស់អ្នកទទេ',
+                Text(
+                  'your_cart_is_empty'.tr,
                   style: TextStyle(fontSize: 18, color: AppTheme.textSecondary),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'សូមបន្ថែមផលិតផលពីទំព័រដើម',
+                Text(
+                  'add_products_from_home'.tr,
                   style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
                 ),
               ],
@@ -107,13 +108,19 @@ class CartView extends GetView<CartController> {
 
   Widget _buildCartItem(CartItem item) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 13),
+      elevation: 0,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: const BorderSide(color: Color(0xFFEDE9E3)),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(13),
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(13),
               child: CachedNetworkImage(
                 imageUrl: item.imageUrl,
                 width: 80,
@@ -134,8 +141,9 @@ class CartView extends GetView<CartController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    item.nameKhmer,
+                  LocalizedText(
+                    khmer: item.nameKhmer,
+                    english: item.nameEnglish,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -145,7 +153,10 @@ class CartView extends GetView<CartController> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'ទំហំ: ${item.selectedSize} | ពណ៌: ${item.selectedColorName}',
+                    'size_color'.trParams({
+                      'size': localizedSize(item.selectedSize),
+                      'color': localizedColor(item.selectedColorName),
+                    }),
                     style: const TextStyle(
                       fontSize: 13,
                       color: AppTheme.textSecondary,
@@ -218,6 +229,7 @@ class CartView extends GetView<CartController> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -233,15 +245,15 @@ class CartView extends GetView<CartController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'សរុប:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  'total_label'.tr,
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                 ),
                 Obx(
                   () => Text(
                     '\$${controller.subtotal.toStringAsFixed(2)}',
                     style: const TextStyle(
-                      fontSize: 24,
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
                       color: AppTheme.primary,
                     ),
@@ -254,7 +266,13 @@ class CartView extends GetView<CartController> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: controller.proceedToCheckout,
-                child: const Text('បន្តទៅបង់ប្រាក់'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 17),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: Text('proceed_to_checkout'.tr),
               ),
             ),
           ],

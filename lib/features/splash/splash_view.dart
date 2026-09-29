@@ -86,8 +86,8 @@ class _SplashViewState extends State<SplashView>
                     ),
                   ),
                   const SizedBox(height: 30),
-                  const Text(
-                    'ហាងម៉ូត',
+                  Text(
+                    'fashion_store'.tr,
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,

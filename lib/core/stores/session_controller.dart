@@ -1,4 +1,6 @@
 import 'package:fashion_app/core/network/dio_client.dart';
+import 'package:fashion_app/services/api/api_service.dart';
+import 'package:fashion_app/services/api/auth_service.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,9 +48,46 @@ class SessionController extends GetxController {
     AuthTokenHolder.token = authToken.value;
   }
 
+  /// Applies server-confirmed profile changes to local state and storage.
+  Future<void> applyProfile({
+    required String name,
+    required String phone,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    userName.value = name;
+    userPhone.value = phone;
+    await prefs.setString('userName', name);
+    await prefs.setString('userPhone', phone);
+  }
+
+  /// Pulls the authoritative profile from the server, falling back to the
+  /// cached values when the request fails (e.g. offline).
+  Future<void> refreshProfile() async {
+    try {
+      final user = await AuthService.me();
+      final name = user['name'] as String? ?? userName.value;
+      final phone = user['phone'] as String? ?? userPhone.value;
+      final email = user['email'] as String? ?? userEmail.value;
+      final id = user['id'] as int? ?? userId.value;
+      await applyProfile(name: name, phone: phone);
+      final prefs = await SharedPreferences.getInstance();
+      userEmail.value = email;
+      await prefs.setString('userEmail', email);
+      await prefs.setInt('userId', id);
+    } on ApiException {
+      // Keep the cached profile when the network call fails.
+    }
+  }
+
   Future<void> clearSession() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    // Remove only session keys; favorites and other prefs must survive logout.
+    await prefs.remove('userId');
+    await prefs.remove('userName');
+    await prefs.remove('userEmail');
+    await prefs.remove('userPhone');
+    await prefs.remove('authToken');
+    await prefs.remove('isLoggedIn');
     userId.value = 0;
     userName.value = '';
     userEmail.value = '';

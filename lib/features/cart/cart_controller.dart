@@ -1,4 +1,5 @@
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/core/routes/app_routes.dart';
 import 'package:fashion_app/models/cart_item.dart';
 import 'package:fashion_app/services/api/cart_service.dart';
@@ -25,7 +26,7 @@ class CartController extends GetxController {
       cartItems.value = items;
       isLoading.value = false;
     } catch (e) {
-      errorMessage.value = e.toString();
+      errorMessage.value = localizedErrorMessage(e);
       isLoading.value = false;
     }
   }
@@ -42,7 +43,7 @@ class CartController extends GetxController {
       // Reload cart to get fresh data from server.
       await loadCart();
     } catch (e) {
-      _showSnackBar(e.toString(), isError: true);
+      _showSnackBar(localizedErrorMessage(e), isError: true);
     }
   }
 
@@ -51,15 +52,15 @@ class CartController extends GetxController {
       await CartService.removeFromCart(item.id);
       // Reload cart to get fresh data from server.
       await loadCart();
-      _showSnackBar('លុបផលិតផលដោយជោគជ័យ');
+      _showSnackBar('item_removed'.tr);
     } catch (e) {
-      _showSnackBar(e.toString(), isError: true);
+      _showSnackBar(localizedErrorMessage(e), isError: true);
     }
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
     Get.snackbar(
-      isError ? 'មានបញ្ហា' : 'ជោគជ័យ',
+      isError ? 'error'.tr : 'success'.tr,
       message,
       backgroundColor: isError ? AppTheme.errorRed : AppTheme.successGreen,
       colorText: Colors.white,
@@ -72,7 +73,7 @@ class CartController extends GetxController {
 
   Future<void> proceedToCheckout() async {
     if (cartItems.isEmpty) {
-      _showSnackBar('កន្ត្រករបស់អ្នកទទេ', isError: true);
+      _showSnackBar('your_cart_is_empty'.tr, isError: true);
       return;
     }
 

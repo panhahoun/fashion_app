@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 class AppTheme {
   // Fashion App Palette
   static const Color primary = Color(0xFF111111); // Deep Black
-  static const Color background = Color(0xFFF8F8F8); // Off White
+  static const Color background = Color(0xFFF7F5F1); // Warm off white
   static const Color card = Color(0xFFFFFFFF); // Surface / Card
   static const Color textPrimary = Color(0xFF222222); // Text
   static const Color textSecondary = Color(0xFF777777); // Secondary Text
@@ -30,9 +30,10 @@ class AppTheme {
         onSurface: textPrimary,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: card,
+        backgroundColor: background,
         elevation: 0,
         iconTheme: IconThemeData(color: primary),
+        centerTitle: false,
         titleTextStyle: TextStyle(
           color: primary,
           fontSize: 18,
@@ -46,9 +47,9 @@ class AppTheme {
           backgroundColor: primary,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
           ),
-          elevation: 2,
+          elevation: 0,
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           textStyle: const TextStyle(
             fontSize: 16,
@@ -62,7 +63,7 @@ class AppTheme {
           foregroundColor: primary,
           side: const BorderSide(color: primary, width: 1.5),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
           ),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           textStyle: const TextStyle(
@@ -73,30 +74,31 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: card,
-        elevation: 3,
-        shadowColor: Colors.black.withValues(alpha: 0.12),
+        elevation: 0,
+        shadowColor: Colors.black.withValues(alpha: 0.05),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: Color(0xFFEDE9E3)),
         ),
         margin: EdgeInsets.zero,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: card,
+        fillColor: Color(0xFFFBFAF8),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: border),
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFFEDE9E3)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: border),
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFFEDE9E3)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: primary, width: 2),
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: primary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: errorRed),
         ),
         contentPadding:

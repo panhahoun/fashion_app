@@ -30,14 +30,14 @@ class ApiService {
     final status = e.response?.statusCode;
     final data = e.response?.data;
 
-    if (status == 401) {
-      return ApiException('Unauthorized. Please login again.');
-    }
-
     // FastAPI errors look like {"detail": "..."} — surface that message.
     if (data is Map && data['detail'] != null) {
       final detail = data['detail'];
       return ApiException(detail is String ? detail : detail.toString());
+    }
+
+    if (status == 401) {
+      return ApiException('Unauthorized. Please login again.');
     }
 
     switch (e.type) {

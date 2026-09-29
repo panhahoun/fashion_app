@@ -1,4 +1,5 @@
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/features/checkout/checkout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,23 +10,28 @@ class CheckoutView extends GetView<CheckoutController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
-      appBar: AppBar(title: const Text('បញ្ជាក់ការបញ្ជាទិញ')),
+      backgroundColor: const Color(0xFFF7F5F1),
+      appBar: AppBar(title: Text('confirm_order'.tr)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
         child: Form(
           key: controller.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: const BorderSide(color: Color(0xFFEDE9E3)),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'ព័ត៌មានអ្នកទទួល',
+                      Text(
+                        'delivery_info'.tr,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -34,13 +40,13 @@ class CheckoutView extends GetView<CheckoutController> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: controller.nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'ឈ្មោះពេញ',
+                        decoration: InputDecoration(
+                          labelText: 'full_name'.tr,
                           prefixIcon: Icon(Icons.person),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'សូមបញ្ចូលឈ្មោះ';
+                            return 'enter_name'.tr;
                           }
                           return null;
                         },
@@ -49,29 +55,48 @@ class CheckoutView extends GetView<CheckoutController> {
                       TextFormField(
                         controller: controller.phoneController,
                         keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(
-                          labelText: 'លេខទូរស័ព្ទ',
+                        decoration: InputDecoration(
+                          labelText: 'phone_number'.tr,
                           prefixIcon: Icon(Icons.phone),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'សូមបញ្ចូលលេខទូរស័ព្ទ';
+                            return 'enter_phone'.tr;
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 16),
+                      Obx(
+                        () => controller.savedAddresses.isEmpty
+                            ? const SizedBox.shrink()
+                            : Align(
+                                alignment: Alignment.centerLeft,
+                                child: TextButton.icon(
+                                  onPressed: controller.pickSavedAddress,
+                                  icon: const Icon(Icons.bookmark_outline,
+                                      size: 18),
+                                  label: Text('choose_saved_address'.tr),
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                ),
+                              ),
+                      ),
                       TextFormField(
                         controller: controller.addressController,
                         maxLines: 3,
-                        decoration: const InputDecoration(
-                          labelText: 'អាសយដ្ឋាន',
+                        decoration: InputDecoration(
+                          labelText: 'address'.tr,
                           prefixIcon: Icon(Icons.location_on),
                           alignLabelWithHint: true,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'សូមបញ្ចូលអាសយដ្ឋាន';
+                            return 'enter_address'.tr;
                           }
                           return null;
                         },
@@ -82,13 +107,18 @@ class CheckoutView extends GetView<CheckoutController> {
               ),
               const SizedBox(height: 16),
               Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: const BorderSide(color: Color(0xFFEDE9E3)),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'វិធីសាស្រ្តបង់ប្រាក់',
+                      Text(
+                        'payment_options'.tr,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -99,15 +129,15 @@ class CheckoutView extends GetView<CheckoutController> {
                         () => RadioGroup<String>(
                           groupValue: controller.paymentMethod.value,
                           onChanged: controller.selectPaymentMethod,
-                          child: const Column(
+                          child: Column(
                             children: [
                               RadioListTile<String>(
-                                title: Text('សាច់ប្រាក់'),
+                                title: Text('cash'.tr),
                                 value: 'សាច់ប្រាក់',
                                 activeColor: AppTheme.primary,
                               ),
                               RadioListTile<String>(
-                                title: Text('ធនាគារ'),
+                                title: Text('bank'.tr),
                                 value: 'ធនាគារ',
                                 activeColor: AppTheme.primary,
                               ),
@@ -121,13 +151,18 @@ class CheckoutView extends GetView<CheckoutController> {
               ),
               const SizedBox(height: 16),
               Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: const BorderSide(color: Color(0xFFEDE9E3)),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'សង្ខេបការបញ្ជាទិញ',
+                      Text(
+                        'order_summary'.tr,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -141,9 +176,23 @@ class CheckoutView extends GetView<CheckoutController> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: Text(
-                                  '${item.nameKhmer} x${item.quantity}',
-                                  style: const TextStyle(fontSize: 14),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: LocalizedText(
+                                        khmer: item.nameKhmer,
+                                        english: item.nameEnglish,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text('×${item.quantity}'),
+                                  ],
                                 ),
                               ),
                               Text(
@@ -160,8 +209,8 @@ class CheckoutView extends GetView<CheckoutController> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'សរុបរួម',
+                          Text(
+                            'subtotal'.tr,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -189,6 +238,12 @@ class CheckoutView extends GetView<CheckoutController> {
                     onPressed: controller.isProcessing.value
                         ? null
                         : controller.placeOrder,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 17),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
                     child: controller.isProcessing.value
                         ? const SizedBox(
                             height: 20,
@@ -200,7 +255,7 @@ class CheckoutView extends GetView<CheckoutController> {
                               ),
                             ),
                           )
-                        : const Text('បញ្ជាក់ការបញ្ជាទិញ'),
+                        : Text('confirm_order'.tr),
                   ),
                 ),
               ),

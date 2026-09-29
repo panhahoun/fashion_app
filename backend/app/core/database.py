@@ -20,6 +20,18 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 
+class Address(Base):
+    __tablename__ = "addresses"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    label = Column(String, default="")
+    recipient_name = Column(String, default="")
+    phone = Column(String, default="")
+    detail = Column(String, default="")
+    is_default = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
 class Category(Base):
     __tablename__ = "categories"
     id = Column(Integer, primary_key=True, index=True)

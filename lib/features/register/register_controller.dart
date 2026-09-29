@@ -1,4 +1,5 @@
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/core/routes/app_routes.dart';
 import 'package:fashion_app/core/stores/session_controller.dart';
 import 'package:fashion_app/services/api/auth_service.dart';
@@ -55,8 +56,8 @@ class RegisterController extends GetxController {
       Get.offAllNamed(AppRoutes.main);
     } catch (e) {
       Get.snackbar(
-        'មានបញ្ហា',
-        e.toString(),
+        'error'.tr,
+        localizedErrorMessage(e),
         backgroundColor: AppTheme.errorRed,
         colorText: Colors.white,
       );

@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings, parse_cors_origins
 from app.core.database import create_tables
-from app.routers import auth, products, categories, cart, orders
+from app.routers import auth, products, categories, cart, orders, addresses
 
 
 @asynccontextmanager
@@ -29,6 +29,7 @@ app.include_router(products.router, prefix="/api/products", tags=["Products"])
 app.include_router(categories.router, prefix="/api/categories", tags=["Categories"])
 app.include_router(cart.router, prefix="/api/cart", tags=["Cart"])
 app.include_router(orders.router, prefix="/api/orders", tags=["Orders"])
+app.include_router(addresses.router, prefix="/api/addresses", tags=["Addresses"])
 
 
 @app.get("/")

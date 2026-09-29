@@ -1,4 +1,5 @@
 import 'package:fashion_app/models/order.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/services/api/order_service.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +23,7 @@ class OrdersController extends GetxController {
       orders.value = result;
       isLoading.value = false;
     } catch (e) {
-      errorMessage.value = e.toString();
+      errorMessage.value = localizedErrorMessage(e);
       isLoading.value = false;
     }
   }

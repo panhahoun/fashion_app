@@ -1,4 +1,6 @@
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
+import 'package:fashion_app/features/cart/cart_controller.dart';
 import 'package:fashion_app/models/product.dart';
 import 'package:fashion_app/services/api/cart_service.dart';
 import 'package:flutter/material.dart';
@@ -53,10 +55,13 @@ class ProductDetailController extends GetxController {
         selectedColorHex: color.hex,
       );
 
-      _showSnackBar('បានបន្ថែមទៅកន្ត្រកដោយជោគជ័យ');
+      if (Get.isRegistered<CartController>()) {
+        await Get.find<CartController>().refreshCart();
+      }
+      _showSnackBar('added_to_cart'.tr);
       Get.back();
     } catch (e) {
-      _showSnackBar(e.toString(), isError: true);
+      _showSnackBar(localizedErrorMessage(e), isError: true);
     } finally {
       isAddingToCart.value = false;
     }
@@ -64,7 +69,7 @@ class ProductDetailController extends GetxController {
 
   void _showSnackBar(String message, {bool isError = false}) {
     Get.snackbar(
-      isError ? 'មានបញ្ហា' : 'ជោគជ័យ',
+      isError ? 'error'.tr : 'success'.tr,
       message,
       backgroundColor: isError ? AppTheme.errorRed : AppTheme.successGreen,
       colorText: Colors.white,

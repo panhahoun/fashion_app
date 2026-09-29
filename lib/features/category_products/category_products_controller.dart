@@ -1,4 +1,5 @@
 import 'package:fashion_app/core/routes/app_routes.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/models/category.dart';
 import 'package:fashion_app/models/product.dart';
 import 'package:fashion_app/services/api/product_service.dart';
@@ -30,7 +31,7 @@ class CategoryProductsController extends GetxController {
       products.value = result;
       isLoading.value = false;
     } catch (e) {
-      errorMessage.value = e.toString();
+      errorMessage.value = localizedErrorMessage(e);
       isLoading.value = false;
     }
   }

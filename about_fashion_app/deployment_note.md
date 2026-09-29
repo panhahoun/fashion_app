@@ -1,8 +1,23 @@
 # Fashion App — Backend Deployment Note (VPS + Domain)
 
+> **The domain is settled:** `<DOMAIN>` in this document = `hpn.world`, and the
+> API host is **`fashionapp.api.hpn.world`**, so the app talks to
+> **`https://fashionapp.api.hpn.world/api`**.
+> SSH alias for the VPS is **`panha`** (same host as `nextgen`).
+>
+> This page is the general walkthrough. For the concrete, copy-paste version with
+> today's values filled in, use **`backend/deploy/RUNBOOK.md`** + `deploy.sh`.
+
 Step-by-step to put the fashion store API live on your Contabo VPS behind
 HTTPS, exactly like the NextGen Scholars setup (`contabo_vps_lesson.md`).
 
+> **Status: deployed 2026-09-29.** API live at
+> `https://fashionapp.api.hpn.world`, verified 23/23. `ssh panha` for the VPS.
+> `backend/deploy/RUNBOOK.md` is the current, copy-pasteable version; this
+> document is the original walkthrough and still explains the reasoning.
+> `lesson_learn.md` records what went wrong — most importantly the compose
+> project-name collision that briefly took NextGen's API offline.
+>
 > **Read this first:** replace `<DOMAIN>` everywhere with the real domain you
 > are using for this app. Two options:
 >

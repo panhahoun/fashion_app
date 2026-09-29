@@ -1,6 +1,17 @@
 """Serialize ORM models into the exact JSON shape the Flutter app expects."""
 
-from app.core.database import Product, Category, CartItem, Order, OrderItem
+from app.core.database import Product, Category, CartItem, Order, OrderItem, Address
+
+
+def address_to_dict(a: Address) -> dict:
+    return {
+        "id": a.id,
+        "label": a.label or "",
+        "recipientName": a.recipient_name or "",
+        "phone": a.phone or "",
+        "detail": a.detail or "",
+        "isDefault": bool(a.is_default),
+    }
 
 
 def product_to_dict(p: Product) -> dict:

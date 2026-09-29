@@ -1,4 +1,5 @@
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/core/routes/app_routes.dart';
 import 'package:fashion_app/core/stores/session_controller.dart';
 import 'package:fashion_app/features/home/home_controller.dart';
@@ -19,7 +20,7 @@ class HomeView extends GetView<HomeController> {
             : 2;
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFFF7F5F1),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -57,16 +58,52 @@ class HomeView extends GetView<HomeController> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '${controller.displayedProducts.length} ផលិតផល',
-                          style: const TextStyle(
-                            color: AppTheme.textSecondary,
-                            fontWeight: FontWeight.w600,
+                      padding: const EdgeInsets.fromLTRB(18, 14, 18, 12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'recommended_for_you'.tr,
+                                  style: TextStyle(
+                                    color: AppTheme.textPrimary,
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                SizedBox(height: 3),
+                                Text(
+                                  'recommended_styles'.tr,
+                                  style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 11,
+                              vertical: 7,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'product_count'.trParams({'count': '${controller.displayedProducts.length}'}),
+                              style: const TextStyle(
+                                color: AppTheme.textSecondary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     GridView.builder(
@@ -107,97 +144,214 @@ class HomeView extends GetView<HomeController> {
   Widget _buildHeroHeader() {
     final session = Get.find<SessionController>();
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [AppTheme.card, Color(0xFFFDF3E7)],
-        ),
-      ),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const CircleAvatar(
-                radius: 24,
-                backgroundColor: AppTheme.primary,
-                child: Icon(Icons.person, color: Colors.white),
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary,
+                  borderRadius: BorderRadius.circular(17),
+                ),
+                child: const Icon(
+                  Icons.person_outline_rounded,
+                  color: Colors.white,
+                  size: 25,
+                ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 11),
               Expanded(
                 child: Obx(
                   () => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'សួស្ដី, ${session.userName.value}',
+                        'hello_name'.trParams({'name': session.userName.value.split(' ').first}),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 17,
                           fontWeight: FontWeight.w800,
+                          color: AppTheme.textPrimary,
                         ),
                       ),
-                      const Text(
-                        'ជ្រើសរើសម៉ូដដែលសាកសមសម្រាប់ថ្ងៃនេះ',
+                      Text(
+                        'ready_new_styles'.tr,
                         style: TextStyle(
-                          fontSize: 13.5,
-                          color: AppTheme.textPrimary,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: AppTheme.textSecondary,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              IconButton(
-                icon: const Icon(
-                  Icons.favorite_border_rounded,
-                  size: 24,
-                  color: AppTheme.primary,
-                ),
-                onPressed: () => Get.toNamed(AppRoutes.favorites),
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.notifications_outlined,
-                  size: 26,
-                  color: AppTheme.primary,
-                ),
-                onPressed: () {},
+              _buildHeaderAction(
+                icon: Icons.favorite_border_rounded,
+                onTap: () => Get.toNamed(AppRoutes.favorites),
               ),
             ],
           ),
-          const SizedBox(height: 14),
-          Obx(
-            () => TextField(
-              controller: controller.searchController,
-              onChanged: controller.onSearchChanged,
-              style: const TextStyle(fontSize: 16, color: AppTheme.textPrimary),
-              decoration: InputDecoration(
-                hintText: 'ស្វែងរកផលិតផល ឬ ប្រភេទ...',
-                hintStyle: const TextStyle(
-                  fontSize: 16,
-                  color: AppTheme.textSecondary,
-                  fontWeight: FontWeight.w400,
-                ),
-                prefixIcon: const Icon(Icons.search, size: 28),
-                suffixIcon: controller.searchQuery.value.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.close, size: 22),
-                        onPressed: controller.clearSearch,
-                      )
-                    : null,
+          const SizedBox(height: 18),
+          Container(
+            height: 132,
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(20, 17, 16, 16),
+            decoration: BoxDecoration(
+              color: AppTheme.primary,
+              borderRadius: BorderRadius.circular(23),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF181715), Color(0xFF39332C)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
+            child: Stack(
+              children: [
+                Positioned(
+                  right: 2,
+                  top: 0,
+                  child: Icon(
+                    Icons.checkroom_rounded,
+                    size: 125,
+                    color: AppTheme.accent.withValues(alpha: 0.2),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppTheme.accent.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        'FASHION  •  STYLE  •  YOU',
+                        style: TextStyle(
+                          color: AppTheme.accent,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      'new_styles_coming'.tr,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      'find_your_fit_size'.tr,
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           Row(
             children: [
-              Expanded(child: _buildSortControl()),
+              Expanded(
+                child: Obx(
+                  () => TextField(
+                    controller: controller.searchController,
+                    onChanged: controller.onSearchChanged,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppTheme.textPrimary,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'search_hint'.tr,
+                      hintStyle: const TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.textSecondary,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.search_rounded,
+                        size: 22,
+                        color: AppTheme.textSecondary,
+                      ),
+                      suffixIcon: controller.searchQuery.value.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.close_rounded, size: 20),
+                              onPressed: controller.clearSearch,
+                            )
+                          : null,
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                          color: Color(0xFFECE8E2),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                          color: AppTheme.accent,
+                          width: 1.4,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              _buildHeaderAction(
+                icon: Icons.tune_rounded,
+                onTap: _openSortSheet,
+                background: AppTheme.primary,
+                foreground: Colors.white,
+              ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderAction({
+    required IconData icon,
+    required VoidCallback onTap,
+    Color background = Colors.white,
+    Color foreground = AppTheme.primary,
+  }) {
+    return Material(
+      color: background,
+      borderRadius: BorderRadius.circular(15),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(15),
+        onTap: onTap,
+        child: Container(
+          width: 46,
+          height: 46,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            border: background == Colors.white
+                ? Border.all(color: const Color(0xFFECE8E2))
+                : null,
+          ),
+          child: Icon(icon, color: foreground, size: 21),
+        ),
       ),
     );
   }
@@ -206,98 +360,46 @@ class HomeView extends GetView<HomeController> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: SizedBox(
-        height: 42,
+        height: 44,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: controller.categories.length,
           separatorBuilder: (_, _) => const SizedBox(width: 8),
           itemBuilder: (context, index) {
             final category = controller.categories[index];
-            final selected = category == controller.selectedCategory.value;
-            return InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: () => controller.selectCategory(category),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 160),
-                padding: EdgeInsets.symmetric(
-                  horizontal: selected ? 12 : 14,
-                  vertical: 9,
-                ),
-                decoration: BoxDecoration(
-                  color: selected ? AppTheme.primary : Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: selected
-                        ? AppTheme.primary
-                        : AppTheme.border,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (selected) ...[
-                      const Icon(
-                        Icons.check_rounded,
-                        size: 15,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 4),
-                    ],
-                    Text(
-                      category,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: selected ? Colors.white : AppTheme.textPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSortControl() {
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: _openSortSheet,
-      child: Container(
-        height: 44,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppTheme.border),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.sort_rounded, size: 20, color: AppTheme.textPrimary),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Obx(
-                () => Text(
-                  controller.sortLabel(controller.sortMode.value),
+            return Obx(() {
+              final selected =
+                  category == controller.selectedCategory.value;
+              return FilterChip(
+                label: Text(
+                  category == HomeController.allCategoryValue
+                      ? 'all'.tr
+                      : localizedCategory(category),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
-                  ),
                 ),
-              ),
-            ),
-            const Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: AppTheme.textSecondary,
-            ),
-          ],
+                selected: selected,
+                onSelected: (_) => controller.selectCategory(category),
+                showCheckmark: true,
+                checkmarkColor: Colors.white,
+                selectedColor: AppTheme.primary,
+                backgroundColor: Colors.white,
+                labelStyle: TextStyle(
+                  color: selected ? Colors.white : AppTheme.textPrimary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+                side: BorderSide(
+                  color: selected ? AppTheme.primary : AppTheme.border,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+              );
+            });
+          },
         ),
       ),
     );
@@ -308,12 +410,12 @@ class HomeView extends GetView<HomeController> {
       context: Get.context!,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(26)),
       ),
       builder: (context) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -326,11 +428,14 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
                 const SizedBox(height: 14),
-                const Align(
+                Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'តម្រៀបតាម',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    'sort_by'.tr,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -383,7 +488,7 @@ class HomeView extends GetView<HomeController> {
           const SizedBox(height: 12),
           Obx(
             () => Text(
-              controller.errorMessage.value ?? 'មានបញ្ហា',
+              controller.errorMessage.value ?? 'error'.tr,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 15, color: AppTheme.textPrimary),
             ),
@@ -392,7 +497,7 @@ class HomeView extends GetView<HomeController> {
           ElevatedButton.icon(
             onPressed: controller.loadProducts,
             icon: const Icon(Icons.refresh),
-            label: const Text('សាកល្បងម្ដងទៀត'),
+            label: Text('try_again'.tr),
           ),
         ],
       ),
@@ -411,8 +516,8 @@ class HomeView extends GetView<HomeController> {
             color: AppTheme.textSecondary,
           ),
           const SizedBox(height: 12),
-          const Text(
-            'រកមិនឃើញផលិតផលដែលត្រូវលក្ខខណ្ឌទេ',
+          Text(
+            'product_not_found'.tr,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 15, color: AppTheme.textPrimary),
           ),

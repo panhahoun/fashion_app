@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/core/routes/app_routes.dart';
 import 'package:fashion_app/models/product.dart';
 import 'package:flutter/material.dart';
@@ -113,7 +114,7 @@ class ProductCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
-                          'នៅសល់ ${product.stock}',
+                          'left_count'.trParams({'stock': '${product.stock}'}),
                           style: const TextStyle(
                             fontSize: 10,
                             color: Colors.white,
@@ -132,8 +133,9 @@ class ProductCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      product.nameKhmer,
+                    LocalizedText(
+                      khmer: product.nameKhmer,
+                      english: product.nameEnglish,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -144,7 +146,7 @@ class ProductCard extends StatelessWidget {
                     if (product.category.trim().isNotEmpty) ...[
                       const SizedBox(height: 2),
                       Text(
-                        product.category,
+                        localizedCategory(product.category),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

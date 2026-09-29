@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
+import 'package:fashion_app/core/localization/locale_controller.dart';
 import 'package:fashion_app/core/stores/favorites_store_controller.dart';
+import 'package:fashion_app/features/cart/cart_controller.dart';
 import 'package:fashion_app/models/product.dart';
 import 'package:fashion_app/services/api/cart_service.dart';
 import 'package:fashion_app/services/api/product_service.dart';
@@ -15,7 +18,9 @@ class HomeController extends GetxController {
   final RxBool isLoading = true.obs;
   final RxnString errorMessage = RxnString();
   final RxString searchQuery = ''.obs;
-  final RxString selectedCategory = 'ទាំងអស់'.obs;
+  static const String allCategoryValue = '__all__';
+
+  final RxString selectedCategory = allCategoryValue.obs;
   final Rx<SortMode> sortMode = SortMode.popular.obs;
 
   final TextEditingController searchController = TextEditingController();
@@ -52,7 +57,7 @@ class HomeController extends GetxController {
       products.value = result;
       isLoading.value = false;
     } catch (e) {
-      errorMessage.value = e.toString();
+      errorMessage.value = localizedErrorMessage(e);
       isLoading.value = false;
     }
   }
@@ -80,8 +85,8 @@ class HomeController extends GetxController {
   Future<void> addProductToCart(Product product) async {
     if (product.stock <= 0) {
       Get.snackbar(
-        'អស់ស្តុក',
-        'ផលិតផលនេះអស់ស្តុក',
+        'out_of_stock'.tr,
+        'out_of_stock'.tr,
         backgroundColor: AppTheme.errorRed,
         colorText: Colors.white,
       );
@@ -104,18 +109,27 @@ class HomeController extends GetxController {
       );
     } catch (e) {
       Get.snackbar(
-        'មានបញ្ហា',
-        e.toString(),
+        'error'.tr,
+        localizedErrorMessage(e),
         backgroundColor: AppTheme.errorRed,
         colorText: Colors.white,
       );
       return;
     }
 
+    if (Get.isRegistered<CartController>()) {
+      await Get.find<CartController>().refreshCart();
+    }
+
     Get.closeCurrentSnackbar();
     Get.snackbar(
-      'ជោគជ័យ',
-      'បានបន្ថែម ${product.nameKhmer} ទៅកន្ត្រក',
+      'success'.tr,
+      'added_name_to_cart'.trParams({
+        'name': localizedContent(
+          khmer: product.nameKhmer,
+          english: product.nameEnglish,
+        ),
+      }),
       backgroundColor: AppTheme.successGreen,
       colorText: Colors.white,
       duration: const Duration(milliseconds: 900),
@@ -129,13 +143,13 @@ class HomeController extends GetxController {
         .toSet()
         .toList()
       ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-    return ['ទាំងអស់', ...categoryList];
+    return [allCategoryValue, ...categoryList];
   }
 
   List<Product> get displayedProducts {
     Iterable<Product> result = products;
 
-    if (selectedCategory.value != 'ទាំងអស់') {
+    if (selectedCategory.value != allCategoryValue) {
       result = result.where(
         (product) => product.category.trim() == selectedCategory.value,
       );
@@ -145,7 +159,7 @@ class HomeController extends GetxController {
       result = result.where((product) {
         final kh = product.nameKhmer.toLowerCase();
         final en = product.nameEnglish.toLowerCase();
-        final category = product.category.toLowerCase();
+        final category = localizedCategory(product.category).toLowerCase();
         return kh.contains(searchQuery.value) ||
             en.contains(searchQuery.value) ||
             category.contains(searchQuery.value);
@@ -167,7 +181,12 @@ class HomeController extends GetxController {
       case SortMode.priceHighToLow:
         list.sort((a, b) => b.price.compareTo(a.price));
       case SortMode.name:
-        list.sort((a, b) => a.nameKhmer.compareTo(b.nameKhmer));
+        final isKhmer = Get.find<LocaleController>().isKhmer;
+        list.sort(
+          (a, b) => isKhmer
+              ? a.nameKhmer.compareTo(b.nameKhmer)
+              : a.nameEnglish.compareTo(b.nameEnglish),
+        );
     }
 
     return list;
@@ -176,15 +195,15 @@ class HomeController extends GetxController {
   String sortLabel(SortMode mode) {
     switch (mode) {
       case SortMode.popular:
-        return 'ពេញនិយម';
+        return 'popular'.tr;
       case SortMode.newest:
-        return 'ថ្មីបំផុត';
+        return 'newest'.tr;
       case SortMode.priceLowToHigh:
-        return 'តម្លៃទាបទៅខ្ពស់';
+        return 'price_low_to_high'.tr;
       case SortMode.priceHighToLow:
-        return 'តម្លៃខ្ពស់ទៅទាប';
+        return 'price_high_to_low'.tr;
       case SortMode.name:
-        return 'ឈ្មោះ';
+        return 'sort_name'.tr;
     }
   }
 

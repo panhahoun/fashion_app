@@ -6,6 +6,16 @@
 # so the fashion API is exposed on 127.0.0.1:8001 -> container :8000.
 # Binding to 127.0.0.1 ONLY (never 0.0.0.0) is what actually protects it,
 # because Docker published ports bypass ufw.
+#
+# DO NOT DELETE the `name:` line below. Compose derives the project name from
+# the directory, and this directory is called "deploy" — the SAME name as
+# ~/nextgen-api/deploy/. Without an explicit name both stacks share the project
+# "deploy", so `docker compose up` in either directory treats the other
+# project's containers as its own and tears them down. That happened on
+# 2026-09-29: deploying fashion killed nextgen-api, and restoring NextGen
+# killed fashion-api.
+
+name: fashion
 
 services:
   api:

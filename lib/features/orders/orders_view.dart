@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/features/orders/orders_controller.dart';
 import 'package:fashion_app/models/order.dart';
 import 'package:flutter/material.dart';
@@ -11,15 +12,15 @@ class OrdersView extends GetView<OrdersController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFFF7F5F1),
       appBar: AppBar(
-        title: const Text('ការបញ្ជាទិញរបស់ខ្ញុំ'),
+        title: Text('my_orders'.tr),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: controller.loadOrders,
-            tooltip: 'ផ្ទុកឡើងវិញ',
+            tooltip: 'refresh'.tr,
           ),
         ],
       ),
@@ -48,14 +49,14 @@ class OrdersView extends GetView<OrdersController> {
             const Icon(Icons.error_outline, size: 64, color: AppTheme.errorRed),
             const SizedBox(height: 16),
             Text(
-              controller.errorMessage.value ?? 'មានបញ្ហា',
+              controller.errorMessage.value ?? 'error'.tr,
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: controller.loadOrders,
-              child: const Text('ព្យាយាមម្តងទៀត'),
+              child: Text('retry'.tr),
             ),
           ],
         ),
@@ -74,13 +75,13 @@ class OrdersView extends GetView<OrdersController> {
             color: AppTheme.textSecondary.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'មិនមានការបញ្ជាទិញ',
+          Text(
+            'no_orders'.tr,
             style: TextStyle(fontSize: 18, color: AppTheme.textSecondary),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'ចាប់ផ្តើមទិញទំនិញឥឡូវនេះ!',
+          Text(
+            'add_products_from_home'.tr,
             style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
           ),
         ],
@@ -93,7 +94,7 @@ class OrdersView extends GetView<OrdersController> {
       onRefresh: controller.loadOrders,
       child: Obx(
         () => ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
           itemCount: controller.orders.length,
           itemBuilder: (context, index) {
             return _buildOrderCard(controller.orders[index]);
@@ -105,7 +106,13 @@ class OrdersView extends GetView<OrdersController> {
 
   Widget _buildOrderCard(Order order) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 0,
+      color: Colors.white,
+      margin: const EdgeInsets.only(bottom: 14),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: const BorderSide(color: Color(0xFFEDE9E3)),
+      ),
       child: InkWell(
         onTap: () => _showOrderDetails(order),
         borderRadius: BorderRadius.circular(16),
@@ -118,7 +125,7 @@ class OrdersView extends GetView<OrdersController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'ការបញ្ជាទិញ #${order.id}',
+                    'order_number'.trParams({'id': '${order.id}'}),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -134,7 +141,7 @@ class OrdersView extends GetView<OrdersController> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      order.statusKhmer,
+                      order.statusLabel,
                       style: TextStyle(
                         color: order.statusColor,
                         fontWeight: FontWeight.bold,
@@ -172,7 +179,7 @@ class OrdersView extends GetView<OrdersController> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    order.paymentMethod,
+                    order.paymentLabel,
                     style: const TextStyle(
                       color: AppTheme.textSecondary,
                       fontSize: 13,
@@ -206,8 +213,9 @@ class OrdersView extends GetView<OrdersController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              item.nameKhmer,
+                            LocalizedText(
+                              khmer: item.nameKhmer,
+                              english: item.nameEnglish,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -216,7 +224,7 @@ class OrdersView extends GetView<OrdersController> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              'ចំនួន: ${item.quantity}',
+                              'quantity_colon'.trParams({'qty': '${item.quantity}'}),
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: AppTheme.textSecondary,
@@ -240,7 +248,7 @@ class OrdersView extends GetView<OrdersController> {
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
-                    '+${order.items.length - 2} ផលិតផលទៀត',
+                    'more_items'.trParams({'count': '${order.items.length - 2}'}),
                     style: const TextStyle(
                       fontSize: 12,
                       color: AppTheme.textSecondary,
@@ -252,8 +260,8 @@ class OrdersView extends GetView<OrdersController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'សរុបរួម',
+                  Text(
+                    'subtotal'.tr,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
@@ -309,7 +317,7 @@ class OrdersView extends GetView<OrdersController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'ការបញ្ជាទិញ #${order.id}',
+                          'order_number'.trParams({'id': '${order.id}'}),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -325,7 +333,7 @@ class OrdersView extends GetView<OrdersController> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            order.statusKhmer,
+                            order.statusLabel,
                             style: TextStyle(
                               color: order.statusColor,
                               fontWeight: FontWeight.bold,
@@ -342,27 +350,27 @@ class OrdersView extends GetView<OrdersController> {
                   controller: scrollController,
                   padding: const EdgeInsets.all(16),
                   children: [
-                    _buildDetailSection('ព័ត៌មានអ្នកទទួល', [
+                    _buildDetailSection('delivery_info'.tr, [
                       _buildDetailRow(
                         Icons.person,
-                        'ឈ្មោះ',
+                        'full_name'.tr,
                         order.customerName,
                       ),
-                      _buildDetailRow(Icons.phone, 'ទូរស័ព្ទ', order.phone),
+                      _buildDetailRow(Icons.phone, 'phone'.tr, order.phone),
                       _buildDetailRow(
                         Icons.location_on,
-                        'អាសយដ្ឋាន',
+                        'address'.tr,
                         order.address,
                       ),
                       _buildDetailRow(
                         Icons.payment,
-                        'វិធីបង់ប្រាក់',
-                        order.paymentMethod,
+                        'payment_method'.tr,
+                        order.paymentLabel,
                       ),
                     ]),
                     const SizedBox(height: 16),
                     _buildDetailSection(
-                      'ផលិតផលទាំងអស់',
+                      'all_products'.tr,
                       order.items.map((item) {
                         return Card(
                           margin: const EdgeInsets.only(bottom: 8),
@@ -385,21 +393,31 @@ class OrdersView extends GetView<OrdersController> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        item.nameKhmer,
+                                      LocalizedText(
+                                        khmer:
+                                            item.nameKhmer,
+                                        english:
+                                            item.nameEnglish,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       Text(
-                                        'ទំហំ: ${item.selectedSize} | ពណ៌: ${item.selectedColorName}',
+                                        'size_color'.trParams({
+                                          'size': localizedSize(item.selectedSize),
+                                          'color': localizedColor(
+                                            item.selectedColorName,
+                                          ),
+                                        }),
                                         style: const TextStyle(
                                           fontSize: 12,
                                           color: AppTheme.textSecondary,
                                         ),
                                       ),
                                       Text(
-                                        'ចំនួន: ${item.quantity}',
+                                        'quantity_colon'.trParams({'qty': '${item.quantity}'}),
                                         style: const TextStyle(
                                           fontSize: 12,
                                           color: AppTheme.textSecondary,
@@ -429,8 +447,8 @@ class OrdersView extends GetView<OrdersController> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'សរុបរួម',
+                            Text(
+                              'subtotal'.tr,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

@@ -12,7 +12,7 @@ class FavoritesView extends GetView<FavoritesScreenController> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('ផលិតផលដែលចូលចិត្ត'),
+        title: Text('favorites'.tr),
         centerTitle: true,
       ),
       body: Obx(() {
@@ -67,13 +67,13 @@ class FavoritesView extends GetView<FavoritesScreenController> {
             const Icon(Icons.error_outline, size: 64, color: AppTheme.errorRed),
             const SizedBox(height: 12),
             Text(
-              controller.errorMessage.value ?? 'មានបញ្ហា',
+              controller.errorMessage.value ?? 'error'.tr,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: controller.loadData,
-              child: const Text('ព្យាយាមម្តងទៀត'),
+              child: Text('retry'.tr),
             ),
           ],
         ),
@@ -82,7 +82,7 @@ class FavoritesView extends GetView<FavoritesScreenController> {
   }
 
   Widget _buildEmpty() {
-    return const Center(
+    return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 28),
         child: Column(
@@ -91,7 +91,7 @@ class FavoritesView extends GetView<FavoritesScreenController> {
             Icon(Icons.favorite_border, size: 72, color: AppTheme.textSecondary),
             SizedBox(height: 12),
             Text(
-              'មិនទាន់មានផលិតផលដែលចូលចិត្តទេ',
+              'no_favorites'.tr,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 15, color: AppTheme.textPrimary),
             ),

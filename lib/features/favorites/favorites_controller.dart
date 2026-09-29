@@ -1,4 +1,5 @@
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/core/stores/favorites_store_controller.dart';
 import 'package:fashion_app/models/product.dart';
 import 'package:fashion_app/services/api/cart_service.dart';
@@ -31,7 +32,7 @@ class FavoritesScreenController extends GetxController {
       allProducts.value = products;
       isLoading.value = false;
     } catch (e) {
-      errorMessage.value = e.toString();
+      errorMessage.value = localizedErrorMessage(e);
       isLoading.value = false;
     }
   }
@@ -50,8 +51,8 @@ class FavoritesScreenController extends GetxController {
   Future<void> addProductToCart(Product product) async {
     if (product.stock <= 0) {
       Get.snackbar(
-        'អស់ស្តុក',
-        'ផលិតផលនេះអស់ស្តុក',
+        'out_of_stock'.tr,
+        'out_of_stock'.tr,
         backgroundColor: AppTheme.errorRed,
         colorText: Colors.white,
       );
@@ -73,15 +74,20 @@ class FavoritesScreenController extends GetxController {
         selectedColorHex: selectedColor.hex,
       );
       Get.snackbar(
-        'ជោគជ័យ',
-        'បានបន្ថែម ${product.nameKhmer} ទៅកន្ត្រក',
+        'success'.tr,
+        'added_name_to_cart'.trParams({
+          'name': localizedContent(
+            khmer: product.nameKhmer,
+            english: product.nameEnglish,
+          ),
+        }),
         backgroundColor: AppTheme.successGreen,
         colorText: Colors.white,
       );
     } catch (e) {
       Get.snackbar(
-        'មានបញ្ហា',
-        e.toString(),
+        'error'.tr,
+        localizedErrorMessage(e),
         backgroundColor: AppTheme.errorRed,
         colorText: Colors.white,
       );

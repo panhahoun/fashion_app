@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fashion_app/core/app_theme.dart';
+import 'package:fashion_app/core/localization/localized_content.dart';
 import 'package:fashion_app/features/product_detail/product_detail_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class ProductDetailView extends GetView<ProductDetailController> {
         : [product.imageUrl];
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF7F5F1),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -47,7 +49,7 @@ class ProductDetailView extends GetView<ProductDetailController> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              color: Colors.white,
+              color: const Color(0xFFF7F5F1),
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,8 +77,9 @@ class ProductDetailView extends GetView<ProductDetailController> {
                       ),
                     ),
                   const SizedBox(height: 16),
-                  Text(
-                    product.nameKhmer,
+                  LocalizedText(
+                    khmer: product.nameKhmer,
+                    english: product.nameEnglish,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -97,12 +100,12 @@ class ProductDetailView extends GetView<ProductDetailController> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '(${product.reviews} សំណេះ)',
+                          'reviews_count'.trParams({'count': '${product.reviews}'}),
                           style: const TextStyle(color: AppTheme.textSecondary),
                         ),
                       ] else
-                        const Text(
-                          'មិនទាន់មានការវាយតម្លៃ',
+                        Text(
+                          'no_reviews'.tr,
                           style: TextStyle(color: AppTheme.textSecondary),
                         ),
                     ],
@@ -117,13 +120,14 @@ class ProductDetailView extends GetView<ProductDetailController> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'ពណ៌នា',
+                  Text(
+                    'product_description'.tr,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    product.descriptionKhmer,
+                  LocalizedText(
+                    khmer: product.descriptionKhmer,
+                    english: product.descriptionEnglish,
                     style: const TextStyle(
                       fontSize: 15,
                       height: 1.5,
@@ -131,8 +135,8 @@ class ProductDetailView extends GetView<ProductDetailController> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'ទំហំ',
+                  Text(
+                    'size'.tr,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -190,8 +194,8 @@ class ProductDetailView extends GetView<ProductDetailController> {
                         color: AppTheme.border,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text(
-                        'Free Size',
+                      child: Text(
+                        'free_size'.tr,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: AppTheme.textPrimary,
@@ -200,8 +204,8 @@ class ProductDetailView extends GetView<ProductDetailController> {
                     ),
                   const SizedBox(height: 20),
                   if (product.colors.isNotEmpty) ...[
-                    const Text(
-                      'ជ្រើសរើសពណ៌',
+                    Text(
+                      'choose_color'.tr,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -244,10 +248,23 @@ class ProductDetailView extends GetView<ProductDetailController> {
                         }).toList(),
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    Obx(
+                      () => Text(
+                        localizedColor(
+                          controller.selectedColor.value?.name ?? '',
+                        ),
+                        style: const TextStyle(
+                          color: AppTheme.textSecondary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                   ],
-                  const Text(
-                    'ចំនួន',
+                  Text(
+                    'quantity'.tr,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -290,7 +307,7 @@ class ProductDetailView extends GetView<ProductDetailController> {
                         ),
                         const Spacer(),
                         Text(
-                          'នៅសល់: ${product.stock}',
+                          'left_colon'.trParams({'stock': '${product.stock}'}),
                           style: const TextStyle(color: AppTheme.textSecondary),
                         ),
                       ],
@@ -334,8 +351,8 @@ class ProductDetailView extends GetView<ProductDetailController> {
                             AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     )
-                  : const Text(
-                      'បន្ថែមទៅកន្ត្រក',
+                  : Text(
+                      'add_to_cart'.tr,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),

@@ -104,6 +104,76 @@ def main():
         r = client.get("/api/products", params={"search": "blouse"})
         check(r.status_code == 200, "search products")
 
+        print("== Profile ==")
+        r = client.put("/api/auth/me", headers=headers, json={"name": "New Name", "phone": "011223344"})
+        check(r.status_code == 200, "update profile -> 200")
+        check(r.json()["name"] == "New Name" and r.json()["phone"] == "011223344", "profile fields persisted")
+
+        r = client.put("/api/auth/me", headers=headers, json={"name": "   "})
+        check(r.status_code == 400, "empty profile name -> 400")
+
+        r = client.post("/api/auth/change-password", headers=headers,
+                        json={"current_password": "wrong", "new_password": "newpass123"})
+        check(r.status_code == 400, "wrong current password -> 400")
+
+        r = client.post("/api/auth/change-password", headers=headers,
+                        json={"current_password": "secret123", "new_password": "short"})
+        check(r.status_code == 400, "too-short new password -> 400")
+
+        r = client.post("/api/auth/change-password", headers=headers,
+                        json={"current_password": "secret123", "new_password": "newpass123"})
+        check(r.status_code == 200, "change password -> 200")
+
+        r = client.post("/api/auth/login", json={"email": "test@fashion.com", "password": "newpass123"})
+        check(r.status_code == 200, "login with the new password -> 200")
+
+        r = client.get("/api/auth/me", headers={"Authorization": "Bearer bad.token"})
+        check(r.status_code == 401, "GET /auth/me bad token -> 401")
+
+        print("== Addresses ==")
+        r = client.get("/api/addresses", headers=headers)
+        check(r.status_code == 200 and r.json() == [], "addresses empty initially")
+
+        r = client.post("/api/addresses", headers=headers, json={"detail": "  "})
+        check(r.status_code == 400, "empty address detail -> 400")
+
+        r = client.post("/api/addresses", headers=headers, json={
+            "label": "Home", "recipient_name": "Test User", "phone": "011223344",
+            "detail": "St 5, Sangkat 3"})
+        check(r.status_code == 200, "create first address -> 200")
+        check(r.json()["isDefault"] is True, "first address becomes default")
+        home_id = r.json()["id"]
+
+        r = client.post("/api/addresses", headers=headers, json={
+            "label": "Work", "recipient_name": "Test User", "phone": "011223344",
+            "detail": "St 9, Khan 1"})
+        check(r.status_code == 200 and r.json()["isDefault"] is False, "second address is not default")
+        work_id = r.json()["id"]
+
+        r = client.get("/api/addresses", headers=headers)
+        check(len(r.json()) == 2, "GET /addresses lists both")
+
+        r = client.put(f"/api/addresses/{work_id}", headers=headers, json={
+            "label": "Work", "detail": "St 9, Khan 1", "is_default": True})
+        check(r.json()["isDefault"] is True, "set work address as default")
+
+        r = client.get("/api/addresses", headers=headers)
+        flags = {a["id"]: a["isDefault"] for a in r.json()}
+        check(flags[work_id] is True and flags[home_id] is False, "only one address stays default")
+
+        r = client.delete(f"/api/addresses/{home_id}", headers=headers)
+        check(r.status_code == 200, "delete address -> 200")
+
+        r = client.get("/api/addresses", headers=headers)
+        check(len(r.json()) == 1, "deleted address removed")
+        check(r.json()[0]["isDefault"] is True, "remaining address keeps default")
+
+        r = client.delete(f"/api/addresses/{home_id}", headers=headers)
+        check(r.status_code == 404, "delete unknown address -> 404")
+
+        r = client.get("/api/addresses")
+        check(r.status_code == 401, "addresses require auth")
+
     print("\nALL SMOKE TESTS PASSED")
 
 

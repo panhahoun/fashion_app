@@ -35,4 +35,41 @@ class AuthService {
       (data) => data as Map<String, dynamic>,
     );
   }
+
+  /// Current user from the server (source of truth for the profile screen).
+  static Future<Map<String, dynamic>> me() {
+    return ApiService.handleRequest(
+      () => DioClient.instance.dio.get('/auth/me'),
+      (data) => data as Map<String, dynamic>,
+    );
+  }
+
+  static Future<Map<String, dynamic>> updateProfile({
+    required String name,
+    required String phone,
+  }) {
+    return ApiService.handleRequest(
+      () => DioClient.instance.dio.put(
+        '/auth/me',
+        data: {'name': name, 'phone': phone},
+      ),
+      (data) => data as Map<String, dynamic>,
+    );
+  }
+
+  static Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    await ApiService.handleRequest<dynamic>(
+      () => DioClient.instance.dio.post(
+        '/auth/change-password',
+        data: {
+          'current_password': currentPassword,
+          'new_password': newPassword,
+        },
+      ),
+      (_) {},
+    );
+  }
 }

@@ -10,21 +10,25 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: const Color(0xFFF7F5F1),
       appBar: AppBar(
-        title: const Text('គណនីរបស់ខ្ញុំ'),
+        title: Text('my_account'.tr),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            _buildProfileHeader(),
-            const SizedBox(height: 28),
-            _buildMenuSection(context),
-            const SizedBox(height: 28),
-            _buildLogoutButton(context),
-          ],
+      body: RefreshIndicator(
+        onRefresh: controller.refreshProfile,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
+          child: Column(
+            children: [
+              _buildProfileHeader(),
+              const SizedBox(height: 20),
+              _buildMenuSection(context),
+              const SizedBox(height: 20),
+              _buildLogoutButton(context),
+            ],
+          ),
         ),
       ),
     );
@@ -33,17 +37,19 @@ class ProfileView extends GetView<ProfileController> {
   Widget _buildProfileHeader() {
     final session = Get.find<SessionController>();
     return Container(
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.all(26),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppTheme.primary, AppTheme.accent],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF171614), Color(0xFF40372F)],
         ),
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: AppTheme.primary.withValues(alpha: 0.12),
+            blurRadius: 22,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -52,11 +58,11 @@ class ProfileView extends GetView<ProfileController> {
           Stack(
             children: [
               const CircleAvatar(
-                radius: 55,
-                backgroundColor: Colors.white,
+                radius: 48,
+                backgroundColor: AppTheme.accent,
                 child: Icon(
                   Icons.person,
-                  size: 65,
+                  size: 54,
                   color: AppTheme.primary,
                 ),
               ),
@@ -122,49 +128,49 @@ class ProfileView extends GetView<ProfileController> {
           _buildMenuItem(
             context,
             icon: Icons.edit,
-            title: 'កែប្រែគណនី',
-            onTap: controller.showComingSoon,
+            title: 'edit_account'.tr,
+            onTap: controller.openEditProfile,
           ),
           const Divider(height: 1),
           _buildMenuItem(
             context,
             icon: Icons.location_on,
-            title: 'អាសយដ្ឋាន',
-            onTap: controller.showComingSoon,
+            title: 'address'.tr,
+            onTap: controller.openAddresses,
           ),
           const Divider(height: 1),
           _buildMenuItem(
             context,
             icon: Icons.favorite,
-            title: 'ផលិតផលដែលចូលចិត្ត',
+            title: 'favorites'.tr,
             onTap: controller.openFavorites,
           ),
           const Divider(height: 1),
           _buildMenuItem(
             context,
             icon: Icons.notifications,
-            title: 'ការជូនដំណឹង',
-            onTap: controller.showComingSoon,
+            title: 'notifications'.tr,
+            onTap: controller.openSettings,
           ),
           const Divider(height: 1),
           _buildMenuItem(
             context,
             icon: Icons.settings,
-            title: 'ការកំណត់',
-            onTap: controller.showComingSoon,
+            title: 'settings'.tr,
+            onTap: controller.openSettings,
           ),
           const Divider(height: 1),
           _buildMenuItem(
             context,
             icon: Icons.help_outline,
-            title: 'ជំនួយ',
+            title: 'help'.tr,
             onTap: () => _showHelpDialog(context),
           ),
           const Divider(height: 1),
           _buildMenuItem(
             context,
             icon: Icons.info_outline,
-            title: 'អំពីកម្មវិធី',
+            title: 'about'.tr,
             onTap: () => _showAboutDialog(context),
           ),
         ],
@@ -192,7 +198,7 @@ class ProfileView extends GetView<ProfileController> {
       child: OutlinedButton.icon(
         onPressed: controller.logout,
         icon: const Icon(Icons.logout),
-        label: const Text('ចាកចេញ'),
+        label: Text('log_out'.tr),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 18),
           side: const BorderSide(color: AppTheme.errorRed, width: 2),
@@ -212,19 +218,19 @@ class ProfileView extends GetView<ProfileController> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        title: const Row(
+        title: Row(
           children: [
             Icon(Icons.help_outline, color: AppTheme.primary),
             SizedBox(width: 12),
-            Text('ជំនួយ'),
+            Text('help'.tr),
           ],
         ),
-        content: const Column(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'ទំនាក់ទំនងមកយើង:',
+              'contact_us'.tr,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 12),
@@ -248,7 +254,7 @@ class ProfileView extends GetView<ProfileController> {
               children: [
                 Icon(Icons.access_time, size: 18),
                 SizedBox(width: 8),
-                Text('ចន្ទ - សុក្រ: 8:00-17:00'),
+                Text('store_hours'.tr),
               ],
             ),
           ],
@@ -256,7 +262,7 @@ class ProfileView extends GetView<ProfileController> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('បិទ'),
+            child: Text('close'.tr),
           ),
         ],
       ),
@@ -270,34 +276,34 @@ class ProfileView extends GetView<ProfileController> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        title: const Row(
+        title: Row(
           children: [
             Icon(Icons.shopping_bag, color: AppTheme.primary),
             SizedBox(width: 12),
-            Text('អំពីកម្មវិធី'),
+            Text('about'.tr),
           ],
         ),
-        content: const Column(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'ហាងម៉ូត - Fashion Store',
+              'app_name'.tr,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 8),
-            Text('កំណែ: 1.0.0'),
+            Text('version'.tr),
             SizedBox(height: 16),
             Text(
-              'កម្មវិធីទិញទំនិញអនឡាញសម្រាប់ម៉ូតនិងគ្រឿងលំអ',
+              'app_tagline'.tr,
               style: TextStyle(height: 1.5),
             ),
             SizedBox(height: 16),
             Text(
-              '© 2026 Fashion Store\nAll rights reserved.',
+              '© 2026 Fashion Store\n${'copyright'.tr}',
               style: TextStyle(
                 fontSize: 12,
                 color: AppTheme.textSecondary,
@@ -308,7 +314,7 @@ class ProfileView extends GetView<ProfileController> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('បិទ'),
+            child: Text('close'.tr),
           ),
         ],
       ),

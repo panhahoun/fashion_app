@@ -1,6 +1,7 @@
 import 'package:fashion_app/core/app_theme.dart';
 import 'package:fashion_app/models/order_item.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Order {
   final int id;
@@ -43,18 +44,32 @@ class Order {
     );
   }
 
-  String get statusKhmer {
+  /// Localized status label for the UI.
+  String get statusLabel {
     switch (status) {
       case 'pending':
-        return 'កំពុងរង់ចាំ';
+        return 'status_pending'.tr;
       case 'processing':
-        return 'កំពុងដំណើរការ';
+        return 'status_processing'.tr;
       case 'completed':
-        return 'បានបញ្ចប់';
+        return 'status_completed'.tr;
       case 'cancelled':
-        return 'បានលុបចោល';
+        return 'status_cancelled'.tr;
       default:
         return status;
+    }
+  }
+
+  /// The payment method is persisted as a Khmer label by the API, so map the
+  /// known values to translation keys for display and keep the rest verbatim.
+  String get paymentLabel {
+    switch (paymentMethod) {
+      case 'សាច់ប្រាក់':
+        return 'cash'.tr;
+      case 'ធនាគារ':
+        return 'bank'.tr;
+      default:
+        return paymentMethod;
     }
   }
 

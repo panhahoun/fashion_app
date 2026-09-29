@@ -27,41 +27,37 @@ class MainNavigationView extends GetView<MainNavigationController> {
         ),
       ),
       bottomNavigationBar: Obx(
-        () => BottomNavigationBar(
-          currentIndex: controller.currentIndex.value,
-          onTap: controller.changeTab,
-          type: BottomNavigationBarType.fixed,
+        () => NavigationBar(
+          selectedIndex: controller.currentIndex.value,
+          onDestinationSelected: controller.changeTab,
           backgroundColor: Colors.white,
-          selectedItemColor: AppTheme.primary,
-          unselectedItemColor: AppTheme.navUnselected,
-          selectedFontSize: 12,
-          unselectedFontSize: 12,
+          indicatorColor: AppTheme.accent.withValues(alpha: 0.18),
           elevation: 8,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'ទំព័រដើម',
+          destinations: [
+            NavigationDestination(
+              icon: const Icon(Icons.home_outlined),
+              selectedIcon: const Icon(Icons.home_rounded),
+              label: 'home'.tr,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.category_outlined),
-              activeIcon: Icon(Icons.category),
-              label: 'ប្រភេទ',
+            NavigationDestination(
+              icon: const Icon(Icons.category_outlined),
+              selectedIcon: const Icon(Icons.category_rounded),
+              label: 'categories'.tr,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined),
-              activeIcon: Icon(Icons.shopping_cart),
-              label: 'កន្ត្រក',
+            NavigationDestination(
+              icon: const Icon(Icons.shopping_bag_outlined),
+              selectedIcon: const Icon(Icons.shopping_bag_rounded),
+              label: 'cart'.tr,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.receipt_long_outlined),
-              activeIcon: Icon(Icons.receipt_long),
-              label: 'ការបញ្ជាទិញ',
+            NavigationDestination(
+              icon: const Icon(Icons.receipt_long_outlined),
+              selectedIcon: const Icon(Icons.receipt_long_rounded),
+              label: 'orders'.tr,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
-              label: 'គណនី',
+            NavigationDestination(
+              icon: const Icon(Icons.person_outline_rounded),
+              selectedIcon: const Icon(Icons.person_rounded),
+              label: 'account'.tr,
             ),
           ],
         ),
