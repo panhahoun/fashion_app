@@ -118,12 +118,8 @@ class LoginView extends GetView<LoginController> {
               ),
             ],
           ),
-                  Positioned(
-            right: 24,
-            top: 16,
-            child: const LanguageSwitcher(),
-          ),
-],
+          Positioned(right: 0, top: 0, child: const LanguageSwitcher()),
+        ],
       ),
     );
   }
@@ -215,8 +211,9 @@ class LoginView extends GetView<LoginController> {
               () => SizedBox(
                 height: 56,
                 child: ElevatedButton(
-                  onPressed:
-                      controller.isLoading.value ? null : controller.login,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : controller.login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primary,
                     foregroundColor: Colors.white,
