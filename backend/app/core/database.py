@@ -105,6 +105,27 @@ class OrderItem(Base):
 def create_tables():
     Base.metadata.create_all(bind=engine)
     _seed_initial_data()
+    _migrate_placeholder_images()
+
+
+# Product seed data. Image URLs are stable Pexels CDN links that match each
+# product (replacing the old random picsum.photos placeholders).
+_SEED_PRODUCTS = [
+    ("អាវសូត្រសម្រាប់ស្ត្រី", "White Silk Blouse", "អាវសូត្រពណ៌សទាន់សម័យ ស្រួលពាក់", "A stylish white silk blouse, comfortable for everyday wear.", 29.99,
+     50, 4.7, 128, "https://images.pexels.com/photos/18504987/pexels-photo-18504987.jpeg?auto=compress&cs=tinysrgb&w=800", "ម៉ូតស្ត្រី", ["S", "M", "L", "XL"], [{"name": "ស", "hex": "#FFFFFF"}, {"name": "ខ្មៅ", "hex": "#000000"}]),
+    ("អាវយឺតដៃវែងខ្មៅ", "Black Long-Sleeve Tee", "អាវយឺតដៃវែងពណ៌ខ្មៅ ស្រាល មិនក្តៅ", "Lightweight black long-sleeve tee, breathable fabric.", 19.99,
+     80, 4.5, 96, "https://images.pexels.com/photos/9558941/pexels-photo-9558941.jpeg?auto=compress&cs=tinysrgb&w=800", "ម៉ូតប្រុស", ["M", "L", "XL"], [{"name": "ខ្មៅ", "hex": "#000000"}]),
+    ("ខោខូវប៊យ", "Classic Blue Jeans", "ខោខូវប៊យកាត់តាមបែបបុរាណ", "Classic cut blue jeans with stretch fit.", 39.99,
+     35, 4.6, 210, "https://images.pexels.com/photos/4109761/pexels-photo-4109761.jpeg?auto=compress&cs=tinysrgb&w=800", "ម៉ូតប្រុស", ["S", "M", "L", "XL", "XXL"], [{"name": "ខៀវ", "hex": "#2E4053"}]),
+    ("រ៉ូបផ្កា", "Floral Print Dress", "រ៉ូបបោះពុម្ពផ្កា ម៉ូដរដូវក្តៅ", "Floral print summer dress with lightweight fabric.", 49.99,
+     20, 4.8, 175, "https://images.pexels.com/photos/12002418/pexels-photo-12002418.jpeg?auto=compress&cs=tinysrgb&w=800", "ម៉ូតស្ត្រី", ["S", "M", "L"], [{"name": "ក្រហម", "hex": "#C0392B"}, {"name": "ខៀវ", "hex": "#2980B9"}]),
+    ("កាបូបស្បែក", "Leather Handbag", "កាបូបស្បែកម៉ូដទាន់សម័យ", "Genuine leather handbag, spacious and durable.", 89.99,
+     15, 4.9, 320, "https://images.pexels.com/photos/27100523/pexels-photo-27100523.jpeg?auto=compress&cs=tinysrgb&w=800", "កាបូប", ["One Size"], [{"name": "ត្នោត", "hex": "#6E2C00"}, {"name": "ខ្មៅ", "hex": "#000000"}]),
+    ("ស្បែកជើងប៉ាតា", "White Sneakers", "ស្បែកជើងប៉ាតាពណ៌ស ស្រួលពាក់", "Comfortable white sneakers for everyday use.", 59.99,
+     40, 4.7, 240, "https://images.pexels.com/photos/1461048/pexels-photo-1461048.jpeg?auto=compress&cs=tinysrgb&w=800", "ស្បែកជើង", ["38", "39", "40", "41", "42"], [{"name": "ស", "hex": "#FFFFFF"}]),
+    ("ក្រវិលមាស", "Gold Hoop Earrings", "ក្រវិលមាសសម្រាប់គ្រប់ឱកាស", "Elegant gold hoop earrings for all occasions.", 24.99,
+     60, 4.4, 88, "https://images.pexels.com/photos/12194360/pexels-photo-12194360.jpeg?auto=compress&cs=tinysrgb&w=800", "គ្រឿងអលង្ការ", ["One Size"], [{"name": "មាស", "hex": "#D4AF37"}]),
+]
 
 
 def _seed_initial_data():
@@ -128,24 +149,8 @@ def _seed_initial_data():
         for name_kh, name_en, icon, color in categories:
             db.add(Category(name_khmer=name_kh, name_english=name_en, icon=icon, color=color))
 
-    products = [
-        ("អាវសូត្រសម្រាប់ស្ត្រី", "White Silk Blouse", "អាវសូត្រពណ៌សទាន់សម័យ ស្រួលពាក់", "A stylish white silk blouse, comfortable for everyday wear.", 29.99,
-         50, 4.7, 128, "https://picsum.photos/seed/f001/500/600", "ម៉ូតស្ត្រី", ["S", "M", "L", "XL"], [{"name": "ស", "hex": "#FFFFFF"}, {"name": "ខ្មៅ", "hex": "#000000"}]),
-        ("អាវយឺតដៃវែងខ្មៅ", "Black Long-Sleeve Tee", "អាវយឺតដៃវែងពណ៌ខ្មៅ ស្រាល មិនក្តៅ", "Lightweight black long-sleeve tee, breathable fabric.", 19.99,
-         80, 4.5, 96, "https://picsum.photos/seed/m001/500/600", "ម៉ូតប្រុស", ["M", "L", "XL"], [{"name": "ខ្មៅ", "hex": "#000000"}]),
-        ("ខោខូវប៊យ", "Classic Blue Jeans", "ខោខូវប៊យកាត់តាមបែបបុរាណ", "Classic cut blue jeans with stretch fit.", 39.99,
-         35, 4.6, 210, "https://picsum.photos/seed/m002/500/600", "ម៉ូតប្រុស", ["S", "M", "L", "XL", "XXL"], [{"name": "ខៀវ", "hex": "#2E4053"}]),
-        ("រ៉ូបផ្កា", "Floral Print Dress", "រ៉ូបបោះពុម្ពផ្កា ម៉ូដរដូវក្តៅ", "Floral print summer dress with lightweight fabric.", 49.99,
-         20, 4.8, 175, "https://picsum.photos/seed/f002/500/600", "ម៉ូតស្ត្រី", ["S", "M", "L"], [{"name": "ក្រហម", "hex": "#C0392B"}, {"name": "ខៀវ", "hex": "#2980B9"}]),
-        ("កាបូបស្បែក", "Leather Handbag", "កាបូបស្បែកម៉ូដទាន់សម័យ", "Genuine leather handbag, spacious and durable.", 89.99,
-         15, 4.9, 320, "https://picsum.photos/seed/b001/500/600", "កាបូប", ["One Size"], [{"name": "ត្នោត", "hex": "#6E2C00"}, {"name": "ខ្មៅ", "hex": "#000000"}]),
-        ("ស្បែកជើងប៉ាតា", "White Sneakers", "ស្បែកជើងប៉ាតាពណ៌ស ស្រួលពាក់", "Comfortable white sneakers for everyday use.", 59.99,
-         40, 4.7, 240, "https://picsum.photos/seed/s001/500/600", "ស្បែកជើង", ["38", "39", "40", "41", "42"], [{"name": "ស", "hex": "#FFFFFF"}]),
-        ("ក្រវិលមាស", "Gold Hoop Earrings", "ក្រវិលមាសសម្រាប់គ្រប់ឱកាស", "Elegant gold hoop earrings for all occasions.", 24.99,
-         60, 4.4, 88, "https://picsum.photos/seed/a001/500/600", "គ្រឿងអលង្ការ", ["One Size"], [{"name": "មាស", "hex": "#D4AF37"}]),
-    ]
     if not db.query(Product).first():
-        for (name_kh, name_en, desc_kh, desc_en, price, stock, rating, reviews, img, cat, sizes, colors) in products:
+        for (name_kh, name_en, desc_kh, desc_en, price, stock, rating, reviews, img, cat, sizes, colors) in _SEED_PRODUCTS:
             db.add(Product(name_khmer=name_kh, name_english=name_en,
                            description_khmer=desc_kh, description_english=desc_en,
                            price=price, stock=stock, rating=rating, reviews=reviews,
@@ -154,6 +159,30 @@ def _seed_initial_data():
 
     db.commit()
     db.close()
+
+
+def _migrate_placeholder_images():
+    """Replace leftover picsum.photos placeholders with product-matching images.
+
+    Runs on every startup but only touches rows still pointing at picsum, so it
+    is idempotent and also upgrades databases seeded by older versions.
+    """
+    image_by_name = {p[1]: p[8] for p in _SEED_PRODUCTS}
+    db = SessionLocal()
+    try:
+        changed = False
+        for product in db.query(Product).filter(
+            Product.image_url.like("%picsum.photos%")
+        ).all():
+            url = image_by_name.get(product.name_english)
+            if url:
+                product.image_url = url
+                product.images = [url]
+                changed = True
+        if changed:
+            db.commit()
+    finally:
+        db.close()
 
 
 def get_db():

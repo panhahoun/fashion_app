@@ -15,11 +15,11 @@ class AppTheme {
   static const Color navUnselected = Color(0xFF999999); // Bottom nav idle
 
   static ThemeData get lightTheme {
-    return ThemeData(
+    final base = ThemeData(
       useMaterial3: true,
       primaryColor: primary,
       scaffoldBackgroundColor: background,
-      fontFamily: 'Khmer OS',
+      fontFamily: 'Poppins',
       colorScheme: const ColorScheme.light(
         primary: primary,
         secondary: accent,
@@ -38,7 +38,8 @@ class AppTheme {
           color: primary,
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          fontFamily: 'Khmer OS',
+          fontFamily: 'Poppins',
+          fontFamilyFallback: ['KantumruyPro'],
         ),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
@@ -125,6 +126,13 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
+      ),
+    );
+
+    return base.copyWith(
+      textTheme: base.textTheme.apply(
+        fontFamily: 'Poppins',
+        fontFamilyFallback: const ['KantumruyPro'],
       ),
     );
   }
