@@ -40,14 +40,10 @@ class AddressFormController extends GetxController {
     }
   }
 
-  @override
-  void onClose() {
-    labelController.dispose();
-    recipientController.dispose();
-    phoneController.dispose();
-    detailController.dispose();
-    super.onClose();
-  }
+  // TextEditingControllers are intentionally not disposed in onClose: GetX
+  // disposes this controller while the form page is still finishing its route
+  // transition, and the page's EditableText then touches the disposed
+  // controller. They are released by GC once the page unmounts.
 
   void setDefault(bool value) => isDefault.value = value;
 

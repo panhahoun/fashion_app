@@ -13,12 +13,11 @@ class LoginController extends GetxController {
   final RxBool obscurePassword = true.obs;
   final RxBool isLoading = false.obs;
 
-  @override
-  void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.onClose();
-  }
+  // TextEditingControllers are intentionally not disposed in onClose: GetX
+  // disposes this controller while the login page is still finishing its route
+  // transition, and the page's EditableText then touches the disposed
+  // controller ("A TextEditingController was used after being disposed").
+  // They are released by GC once the page unmounts.
 
   void toggleObscurePassword() => obscurePassword.toggle();
 
@@ -42,16 +41,16 @@ class LoginController extends GetxController {
         token: result['access_token'] as String,
       );
 
+      // Do not touch state after navigating away.
       Get.offAllNamed(AppRoutes.main);
     } catch (e) {
+      isLoading.value = false;
       Get.snackbar(
         'error'.tr,
         localizedErrorMessage(e),
         backgroundColor: AppTheme.errorRed,
         colorText: Colors.white,
       );
-    } finally {
-      isLoading.value = false;
     }
   }
 }

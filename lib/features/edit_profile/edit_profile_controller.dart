@@ -31,15 +31,10 @@ class EditProfileController extends GetxController {
     phoneController.text = session.userPhone.value;
   }
 
-  @override
-  void onClose() {
-    nameController.dispose();
-    phoneController.dispose();
-    currentPasswordController.dispose();
-    newPasswordController.dispose();
-    confirmPasswordController.dispose();
-    super.onClose();
-  }
+  // TextEditingControllers are intentionally not disposed in onClose: GetX
+  // disposes this controller while the page is still finishing its route
+  // transition, and the page's EditableText then touches the disposed
+  // controller. They are released by GC once the page unmounts.
 
   void togglePasswordSection() => showPasswordSection.toggle();
   void toggleCurrent() => obscureCurrent.toggle();

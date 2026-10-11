@@ -144,13 +144,10 @@ class CheckoutController extends GetxController {
     if (selected != null) applyAddress(selected);
   }
 
-  @override
-  void onClose() {
-    nameController.dispose();
-    phoneController.dispose();
-    addressController.dispose();
-    super.onClose();
-  }
+  // TextEditingControllers are intentionally not disposed in onClose: GetX
+  // disposes this controller while the checkout page is still finishing its
+  // route transition, and the page's EditableText then touches the disposed
+  // controller. They are released by GC once the page unmounts.
 
   void selectPaymentMethod(String? method) {
     if (method != null) paymentMethod.value = method;

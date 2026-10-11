@@ -41,6 +41,20 @@ rm fashion_store.db                 # tables + seed regenerate on next start
 | `SECRET_KEY`       | `fashion-store-secret-2026-...`  | JWT signing secret              |
 | `TOKEN_EXPIRE_HOURS` | `24`                           | JWT lifetime in hours           |
 
+### Production persistence (important)
+
+Render's free web services use an **ephemeral filesystem**: the SQLite file is
+deleted every time the service restarts, spins down, or redeploys, so any
+registered account disappears. For a durable deployment, set `DATABASE_URL` to a
+managed Postgres (a free Neon/Supabase project works) instead of a SQLite file:
+
+```bash
+DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
+```
+
+`psycopg2-binary` ships in `requirements.txt`, and `postgres://` URLs from the
+provider are normalized to `postgresql://` automatically.
+
 ## Tests
 
 ```bash

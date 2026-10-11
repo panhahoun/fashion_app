@@ -5,7 +5,24 @@ import datetime
 
 from app.core.config import settings
 
-engine = create_engine(settings.database_url, connect_args={"check_same_thread": False})
+def _create_engine():
+    """Build the SQLAlchemy engine, tolerating managed-hosting quirks.
+
+    - Render/Heroku hand out ``postgres://`` URLs; SQLAlchemy 2.x needs
+      ``postgresql://``.
+    - ``check_same_thread`` is a SQLite-only connect arg and would break
+      psycopg2/Postgres.
+    - ``pool_pre_ping`` transparently reconnects when a managed Postgres has
+      dropped an idle connection.
+    """
+    url = settings.database_url
+    if url.startswith("postgres://"):
+        url = "postgresql://" + url[len("postgres://"):]
+    connect_args = {"check_same_thread": False} if url.startswith("sqlite") else {}
+    return create_engine(url, connect_args=connect_args, pool_pre_ping=True)
+
+
+engine = _create_engine()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

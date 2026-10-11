@@ -35,7 +35,6 @@ class HomeController extends GetxController {
   @override
   void onClose() {
     _searchDebounce?.cancel();
-    searchController.dispose();
     super.onClose();
   }
 
