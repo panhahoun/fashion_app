@@ -4,9 +4,9 @@ import 'package:fashion_app/core/localization/app_translations.dart';
 import 'package:fashion_app/core/localization/locale_controller.dart';
 import 'package:fashion_app/core/routes/app_pages.dart';
 import 'package:fashion_app/core/routes/app_routes.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,7 +52,8 @@ class FashionStoreApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = initialLocale ??
+    final locale =
+        initialLocale ??
         (Get.isRegistered<LocaleController>()
             ? Get.find<LocaleController>().currentLocale.value
             : AppTranslations.kh);
