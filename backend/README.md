@@ -52,7 +52,7 @@ managed Postgres (a free Neon/Supabase project works) instead of a SQLite file:
 DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
 ```
 
-`psycopg2-binary` ships in `requirements.txt`, and `postgres://` URLs from the
+`psycopg[binary]` ships in `requirements.txt`, and `postgres://` URLs from the
 provider are normalized to `postgresql://` automatically.
 
 ## Tests

@@ -8,16 +8,21 @@ from app.core.config import settings
 def _create_engine():
     """Build the SQLAlchemy engine, tolerating managed-hosting quirks.
 
-    - Render/Heroku hand out ``postgres://`` URLs; SQLAlchemy 2.x needs
+    - Render/Heroku hand out ``postgres://`` URLs; SQLAlchemy needs
       ``postgresql://``.
+    - SQLAlchemy 2.1 defaults ``postgresql://`` to the psycopg v3 driver while
+      2.0 defaults to psycopg2; pin ``postgresql+psycopg`` so both versions use
+      the same driver (``psycopg[binary]`` in requirements.txt).
     - ``check_same_thread`` is a SQLite-only connect arg and would break
-      psycopg2/Postgres.
+      psycopg/Postgres.
     - ``pool_pre_ping`` transparently reconnects when a managed Postgres has
       dropped an idle connection.
     """
     url = settings.database_url
     if url.startswith("postgres://"):
         url = "postgresql://" + url[len("postgres://"):]
+    if url.startswith("postgresql://"):
+        url = "postgresql+psycopg://" + url[len("postgresql://"):]
     connect_args = {"check_same_thread": False} if url.startswith("sqlite") else {}
     return create_engine(url, connect_args=connect_args, pool_pre_ping=True)
 
