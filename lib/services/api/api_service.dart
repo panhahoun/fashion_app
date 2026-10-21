@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:fashion_app/core/api_config.dart';
 
-/// Shared Dio request wrapper + typed exception.
-///
-/// FastAPI returns raw JSON (not a {success, data} envelope), so parsers read
-/// values straight off the response body.
+/// Shared Dio request wrapper + typed exception. FastAPI returns raw JSON, so
+/// parsers read values straight off the response body.
 class ApiService {
   static Future<T> handleRequest<T>(
     Future<Response<dynamic>> Function() request,

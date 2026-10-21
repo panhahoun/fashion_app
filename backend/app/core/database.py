@@ -131,7 +131,7 @@ def create_tables():
 
 
 # Product seed data. Image URLs are stable Pexels CDN links that match each
-# product (replacing the old random picsum.photos placeholders).
+# product.
 _SEED_PRODUCTS = [
     ("អាវសូត្រសម្រាប់ស្ត្រី", "White Silk Blouse", "អាវសូត្រពណ៌សទាន់សម័យ ស្រួលពាក់", "A stylish white silk blouse, comfortable for everyday wear.", 29.99,
      50, 4.7, 128, "https://images.pexels.com/photos/18504987/pexels-photo-18504987.jpeg?auto=compress&cs=tinysrgb&w=800", "ម៉ូតស្ត្រី", ["S", "M", "L", "XL"], [{"name": "ស", "hex": "#FFFFFF"}, {"name": "ខ្មៅ", "hex": "#000000"}]),

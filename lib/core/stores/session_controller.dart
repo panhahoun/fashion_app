@@ -60,8 +60,7 @@ class SessionController extends GetxController {
     await prefs.setString('userPhone', phone);
   }
 
-  /// Pulls the authoritative profile from the server, falling back to the
-  /// cached values when the request fails (e.g. offline).
+  /// Refreshes the profile from the server; keeps cached values on failure.
   Future<void> refreshProfile() async {
     try {
       final user = await AuthService.me();

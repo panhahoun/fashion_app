@@ -21,8 +21,7 @@ class SettingsController extends GetxController {
 
   LocaleController get locale => Get.find<LocaleController>();
 
-  /// Notification preferences live in local storage; the backend has no
-  /// push-notification channel yet, so they are per-device settings.
+  /// Per-device notification preferences, stored locally.
   Future<void> loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     orderUpdatesEnabled.value = prefs.getBool(orderUpdatesKey) ?? true;

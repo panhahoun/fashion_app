@@ -51,8 +51,7 @@ class CheckoutController extends GetxController {
     loadSavedAddresses();
   }
 
-  /// Loads saved addresses and pre-fills the default one, so the common case
-  /// needs no typing at all.
+  /// Loads saved addresses and pre-fills the default one.
   Future<void> loadSavedAddresses() async {
     try {
       final addresses = await AddressService.getAddresses();

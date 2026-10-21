@@ -1,15 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:fashion_app/core/api_config.dart';
 
-/// In-memory holder for the current auth token.
-///
-/// The Dio interceptor reads this on every request so the token is always
-/// attached without needing a circular dependency on the session store.
+/// In-memory holder for the current auth token, read by the Dio interceptor.
 class AuthTokenHolder {
   static String? token;
 
-  /// Invoked when an authenticated request is rejected with 401, so the app
-  /// can clear the stale session and return to the login screen.
+  /// Invoked on 401 from an authenticated request to clear the session.
   static void Function()? onUnauthorized;
 }
 

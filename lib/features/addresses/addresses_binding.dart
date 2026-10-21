@@ -6,8 +6,7 @@ class AddressesBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<AddressesController>(() => AddressesController());
-    // The form is pushed on top of the list and talks back to the list
-    // controller, so the form controller itself is never registered.
+    // The form talks back to the list controller; it is not registered itself.
   }
 }
 

@@ -60,8 +60,7 @@ class Order {
     }
   }
 
-  /// The payment method is persisted as a Khmer label by the API, so map the
-  /// known values to translation keys for display and keep the rest verbatim.
+  /// Maps the API's Khmer payment labels to translation keys.
   String get paymentLabel {
     switch (paymentMethod) {
       case 'សាច់ប្រាក់':
