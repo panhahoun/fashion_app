@@ -40,7 +40,6 @@ class CartController extends GetxController {
 
     try {
       await CartService.updateCartItem(item.id, newQuantity);
-      // Reload cart to get fresh data from server.
       await loadCart();
     } catch (e) {
       _showSnackBar(localizedErrorMessage(e), isError: true);
@@ -50,7 +49,6 @@ class CartController extends GetxController {
   Future<void> removeItem(CartItem item) async {
     try {
       await CartService.removeFromCart(item.id);
-      // Reload cart to get fresh data from server.
       await loadCart();
       _showSnackBar('item_removed'.tr);
     } catch (e) {

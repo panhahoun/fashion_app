@@ -40,10 +40,8 @@ class AddressFormController extends GetxController {
     }
   }
 
-  // TextEditingControllers are intentionally not disposed in onClose: GetX
-  // disposes this controller while the form page is still finishing its route
-  // transition, and the page's EditableText then touches the disposed
-  // controller. They are released by GC once the page unmounts.
+  // Left to GC: disposing here races the route transition and throws
+  // "used after being disposed".
 
   void setDefault(bool value) => isDefault.value = value;
 

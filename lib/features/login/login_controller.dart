@@ -13,11 +13,8 @@ class LoginController extends GetxController {
   final RxBool obscurePassword = true.obs;
   final RxBool isLoading = false.obs;
 
-  // TextEditingControllers are intentionally not disposed in onClose: GetX
-  // disposes this controller while the login page is still finishing its route
-  // transition, and the page's EditableText then touches the disposed
-  // controller ("A TextEditingController was used after being disposed").
-  // They are released by GC once the page unmounts.
+  // Left to GC: disposing here races the route transition and throws
+  // "used after being disposed".
 
   void toggleObscurePassword() => obscurePassword.toggle();
 

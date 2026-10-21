@@ -31,10 +31,8 @@ class EditProfileController extends GetxController {
     phoneController.text = session.userPhone.value;
   }
 
-  // TextEditingControllers are intentionally not disposed in onClose: GetX
-  // disposes this controller while the page is still finishing its route
-  // transition, and the page's EditableText then touches the disposed
-  // controller. They are released by GC once the page unmounts.
+  // Left to GC: disposing here races the route transition and throws
+  // "used after being disposed".
 
   void togglePasswordSection() => showPasswordSection.toggle();
   void toggleCurrent() => obscureCurrent.toggle();

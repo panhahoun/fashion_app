@@ -1,11 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-/// App-wide Khmer / English translations.
-///
-/// Every key has an entry in both maps so switching the language never renders
-/// a raw key. Khmer is the source language of the original UI, so [kh] holds
-/// the original copy and is also the fallback locale.
+/// Khmer / English UI strings. Khmer is the source language and the fallback.
+/// Every key exists in both maps, so switching locale never shows a raw key.
 class AppTranslations extends Translations {
   static const Locale kh = Locale('km');
   static const Locale en = Locale('en');

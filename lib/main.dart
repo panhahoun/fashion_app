@@ -11,10 +11,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ============================================================================
-// MAIN APP - FASHION STORE (GetX + Dio)
-// ============================================================================
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Load .env so API/Base URL can be changed without touching source code.

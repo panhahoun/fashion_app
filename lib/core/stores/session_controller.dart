@@ -4,7 +4,7 @@ import 'package:fashion_app/services/api/auth_service.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Reactive replacement for the old static [UserSession] store.
+/// Signed-in user state, persisted in SharedPreferences.
 class SessionController extends GetxController {
   final RxInt userId = 1.obs;
   final RxString userName = 'សុខ ធីតា'.obs;

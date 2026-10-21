@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Reactive replacement for the old static [FavoritesStore].
+/// Favorite product ids, persisted in SharedPreferences.
 class FavoritesStoreController extends GetxController {
   static const String _prefsKey = 'favoriteProductIds';
 

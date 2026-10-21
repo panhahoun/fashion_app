@@ -6,12 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  // GetX applies a locale change with Get.updateLocale(), which calls
-  // engine.performReassemble(). That rebuilds the whole tree and leaves
-  // AutomatedTestWidgetsFlutterBinding permanently out of
-  // SchedulerPhase.idle, so neither pumpAndSettle() nor pump() can run
-  // afterwards. The language switch is therefore not widget-testable; each
-  // locale is exercised by booting the app straight into it instead.
+  // Get.updateLocale() triggers performReassemble(), which pins the test
+  // binding out of SchedulerPhase.idle and breaks pump(). Each locale is
+  // tested by booting the app into it instead of toggling at runtime.
   Future<void> launch(WidgetTester tester, {Locale? locale}) async {
     SharedPreferences.setMockInitialValues(
       locale == null
